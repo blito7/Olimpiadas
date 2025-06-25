@@ -1,0 +1,78 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #fdfdfd;
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.login-box {
+  max-width: 320px;
+  z-index: 10;
+}
+
+.card {
+  border: none;
+}
+
+.card-title {
+  font-weight: bold;
+}
+
+footer h5 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+footer a:hover {
+  text-decoration: underline;
+  color: #0dcaf0;
+}
+
+.carousel-item img {
+  height: 600px;
+  object-fit: cover;
+}
+
+/* Responsivo para login-box */
+@media (max-width: 768px) {
+  .login-box {
+    position: static !important;
+    transform: none !important;
+    margin-top: 1rem;
+  }
+}
+
+.video-container {
+  max-width: 700px;
+  width: 90%;
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 16px;
+}
+
+.video-title {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+}
+
+.video-wrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 ratio */
+  height: 0;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
