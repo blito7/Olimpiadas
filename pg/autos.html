@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alquiler de Autos | Despegar.com.ar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f7f7f7;
+        }
+        
+        .car-card {
+            transition: all 0.3s ease;
+        }
+        
+        .car-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        
+        .filter-section {
+            transition: all 0.3s ease;
+        }
+        
+        .filter-section.collapsed {
+            max-height: 50px;
+            overflow: hidden;
+        }
+        
+        .filter-toggle::after {
+            content: '+';
+            float: right;
+            font-weight: bold;
+        }
+        
+        .filter-toggle.collapsed::after {
+            content: '-';
+        }
+        
+        .car-image-container {
+            height: 180px;
+            overflow: hidden;
+        }
+        
+        .rating-stars {
+            color: #FFD700;
+            font-size: 0.9em;
+        }
+        
+        .feature-icon {
+            color: #00aa6c;
+            margin-right: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .search-form-container {
+                padding: 10px;
+            }
+            
+            .car-image-container {
+                height: 120px;
+            }
+            
+            .car-features {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="text-blue-600 font-bold text-2xl">DESPEGAR</div>
+            
+            
+
+<nav class="hidden md:flex space-x-6">
+    <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium">Inicio</a>
+    <a href="vuelos.html" class="text-gray-700 hover:text-blue-600 font-medium">Vuelos</a>
+    <a href="hoteles.html" class="text-gray-700 hover:text-blue-600 font-medium">Hoteles</a>
+    <a href="paquetes.html" class="text-gray-700 hover:text-blue-600 font-medium">Paquetes</a>
+    <a href="autos.html" class="text-gray-700 hover:text-blue-600 font-medium">Autos</a>
+</nav>
+
+
+            
+            <div class="flex items-center space-x-4">
+                <div class="hidden md:block">
+                    <button class="bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200">
+                       <i class="fas fa-phone-alt mr-2"></i> Atención al cliente
+                    </button>
+                </div>
+                <button id="loginBtn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    Ingresar
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-6">
+        <!-- Breadcrumbs -->
+        <div class="mb-6 text-sm text-gray-600">
+            <a href="#" class="hover:text-blue-600">Inicio</a> > 
+            <a href="#" class="hover:text-blue-600">Autos</a> > 
+            <span class="text-gray-900">Alquiler de autos</span>
+        </div>
+        
+        <!-- Search Form -->
+        <section class="bg-white rounded-lg shadow-md mb-8">
+            <div class="p-6 search-form-container">
+                <h1 class="text-2xl font-bold mb-4">Alquiler de autos</h1>
+                
+                <form class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-gray-700 mb-1 font-medium">Ciudad</label>
+                        <input type="text" class="w-full p-3 border border-gray-300 rounded-lg" placeholder="Ej. Buenos Aires" value="Buenos Aires">
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-gray-700 mb-1 font-medium">Retiro</label>
+                            <input type="date" class="w-full p-3 border border-gray-300 rounded-lg" value="2023-12-01">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-1 font-medium">Hora</label>
+                            <select class="w-full p-3 border border-gray-300 rounded-lg">
+                                <option>09:00</option>
+                                <option>10:00</option>
+                                <option selected>11:00</option>
+                                <option>12:00</option>
+                                <option>13:00</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-gray-700 mb-1 font-medium">Devolución</label>
+                            <input type="date" class="w-full p-3 border border-gray-300 rounded-lg" value="2023-12-05">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 mb-1 font-medium">Hora</label>
+                            <select class="w-full p-3 border border-gray-300 rounded-lg">
+                                <option>09:00</option>
+                                <option>10:00</option>
+                                <option selected>11:00</option>
+                                <option>12:00</option>
+                                <option>13:00</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 mb-1 font-medium">Edad conductor</label>
+                        <select class="w-full p-3 border border-gray-300 rounded-lg">
+                            <option>25 años</option>
+                            <option selected>30 años</option>
+                            <option>35 años</option>
+                            <option>40 años</option>
+                        </select>
+                    </div>
+                    
+                    <div class="md:col-span-4">
+                        <button class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 w-full font-bold">
+                            BUSCAR AUTOS
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+        
+        <div class="flex flex-col md:flex-row gap-6">
+            <!-- Filters Sidebar -->
+            <aside class="w-full md:w-1/4 bg-white rounded-lg shadow-md p-4 h-fit">
+                <h2 class="text-lg font-bold mb-4">Filtrar por</h2>
+                
+                <!-- Price Filter -->
+                <div class="mb-6">
+                    <div class="filter-toggle collapsed font-medium mb-2 cursor-pointer flex justify-between items-center">
+                        <span>Precio por día</span>
+                        <span>+</span>
+                    </div>
+                    <div class="filter-section collapsed">
+                        <div class="mb-3">
+                            <label class="block text-gray-700 mb-1">Rango de precios</label>
+                            <input type="range" min="1000" max="15000" value="8000" class="w-full">
+                            <div class="flex justify-between mt-1">
+                                <span>$1,000</span>
+                                <span>$15,000</span>
+                            </div>
+                        </div>
+                        <button class="text-blue-600 hover:text-green-700 text-sm font-medium">
+                            Aplicar filtro
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Car Type Filter -->
+                <div class="mb-6">
+                    <div class="filter-toggle collapsed font-medium mb-2 cursor-pointer flex justify-between items-center">
+                        <span>Tipo de vehículo</span>
+                        <span>+</span>
+                    </div>
+                    <div class="filter-section collapsed">
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" checked class="mr-2">
+                                <span>Económico</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" checked class="mr-2">
+                                <span>Compacto</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" checked class="mr-2">
+                                <span>Mediano</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2">
+                                <span>SUV</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2">
+                                <span>Lujo</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Transmission Filter -->
+                <div class="mb-6">
+                    <div class="filter-toggle collapsed font-medium mb-2 cursor-pointer flex justify-between items-center">
+                        <span>Transmisión</span>
+                        <span>+</span>
+                    </div>
+                    <div class="filter-section collapsed">
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="radio" name="transmission" checked class="mr-2">
+                                <span>Automático</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="radio" name="transmission" class="mr-2">
+                                <span>Manual</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Supplier Filter -->
+                <div class="mb-6">
+                    <div class="filter-toggle collapsed font-medium mb-2 cursor-pointer flex justify-between items-center">
+                        <span>Proveedores</span>
+                        <span>+</span>
+                    </div>
+                    <div class="filter-section collapsed">
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" checked class="mr-2">
+                                <span>Hertz</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" checked class="mr-2">
+                                <span>Avis</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" checked class="mr-2">
+                                <span>Localiza</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" checked class="mr-2">
+                                <span>Alamo</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="mr-2">
+                                <span>Movidrive</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="w-full bg-gray-100 text-gray-700 py-2 rounded-lg hover:bg-gray-200 font-medium">
+                    Limpiar filtros
+                </button>
+            </aside>
+            
+            <!-- Results Section -->
+            <section class="w-full md:w-3/4">
+                <div class="bg-white rounded-lg shadow-md p-4 mb-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h2 class="text-lg font-bold">Buenos Aires</h2>
+                            <p class="text-gray-600">01 dic - 05 dic • 11:00 • Aeropuerto</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-600 text-right">Ordenar por:</p>
+                            <select class="border border-gray-300 rounded p-2">
+                                <option selected>Precio (más bajo primero)</option>
+                                <option>Mejor valorados</option>
+                                <option>Más económicos</option>
+                                <option>Nombre de proveedor (A-Z)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Car Results -->
+                <div class="space-y-6">
+                    <!-- Car 1 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden car-card">
+                        <div class="flex flex-col md:flex-row">
+                            <div class="w-full md:w-1/4 p-4">
+                                <div class="car-image-container rounded-lg overflow-hidden">
+                                    <img src="https://placehold.co/400x250?text=Volkswagen+Golf" alt="Volkswagen Golf blanco modelo 2023 en una calle urbana" class="w-full h-full object-cover">
+                                </div>
+                                <div class="bg-yellow-100 text-yellow-800 text-sm p-2 mt-2 rounded text-center">
+                                    OFERTA ESPECIAL
+                                </div>
+                            </div>
+                            
+                            <div class="w-full md:w-2/4 p-4 border-b md:border-b-0 md:border-r">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div>
+                                        <h3 class="font-bold text-lg">Volkswagen Golf</h3>
+                                        <p class="text-gray-600">Compacto • Automático • Aire acondicionado</p>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <span class="rating-stars">★★★★★</span>
+                                        <span class="text-gray-600 ml-1">(128)</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="car-features flex space-x-4 my-4">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-user feature-icon"></i>
+                                        <span>5 personas</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-suitcase feature-icon"></i>
+                                        <span>2 maletas</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-gas-pump feature-icon"></i>
+                                        <span>Full a full</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-sm text-gray-600 mb-2">
+                                    <p><i class="fas fa-map-marker-alt text-blue-600 mr-1"></i> Retiro y devolución en Aeropuerto Internacional Ezeiza</p>
+                                </div>
+                                
+                                <div class="text-sm text-gray-600 mb-2 flex items-center">
+                                    <i class="fas fa-shield-alt text-blue-600 mr-1"></i>
+                                    <p>Cancelación gratuita hasta 24 horas antes del retiro</p>
+                                </div>
+                            </div>
+                            
+                            <div class="w-full md:w-1/4 p-4">
+                                <div class="flex flex-col h-full justify-between">
+                                    <div class="text-right">
+                                        <p class="text-gray-600 line-through text-sm">$12,999</p>
+                                        <p class="text-2xl font-bold text-blue-600">$9,999 <span class="text-sm font-normal">/día</span></p>
+                                        <p class="text-sm text-gray-600">Total: $39,996</p>
+                                    </div>
+                                    <button class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 w-full font-medium">
+                                        Reservar ahora
+                                    </button>
+                                    <a href="#" class="text-blue-600 hover:underline text-sm mt-2 text-center">Ver detalles</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Car 2 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden car-card">
+                        <div class="flex flex-col md:flex-row">
+                            <div class="w-full md:w-1/4 p-4">
+                                <div class="car-image-container rounded-lg overflow-hidden">
+                                    <img src="https://placehold.co/400x250?text=Toyota+Corolla" alt="Toyota Corolla gris modelo 2023 estacionado frente a un edificio moderno" class="w-full h-full object-cover">
+                                </div>
+                            </div>
+                            
+                            <div class="w-full md:w-2/4 p-4 border-b md:border-b-0 md:border-r">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div>
+                                        <h3 class="font-bold text-lg">Toyota Corolla</h3>
+                                        <p class="text-gray-600">Sedán • Automático • Aire acondicionado</p>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <span class="rating-stars">★★★★☆</span>
+                                        <span class="text-gray-600 ml-1">(94)</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="car-features flex space-x-4 my-4">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-user feature-icon"></i>
+                                        <span>5 personas</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-suitcase feature-icon"></i>
+                                        <span>3 maletas</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-gas-pump feature-icon"></i>
+                                        <span>Full a full</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-sm text-gray-600 mb-2">
+                                    <p><i class="fas fa-map-marker-alt text-blue-600 mr-1"></i> Retiro y devolución en Aeropuerto Internacional Ezeiza</p>
+                                </div>
+                                
+                                <div class="text-sm text-gray-600 mb-2 flex items-center">
+                                    <i class="fas fa-shield-alt text-blue-600 mr-1"></i>
+                                    <p>Cancelación gratuita hasta 24 horas antes del retiro</p>
+                                </div>
+                            </div>
+                            
+                            <div class="w-full md:w-1/4 p-4">
+                                <div class="flex flex-col h-full justify-between">
+                                    <div class="text-right">
+                                        <p class="text-2xl font-bold text-blue-600">$11,499 <span class="text-sm font-normal">/día</span></p>
+                                        <p class="text-sm text-gray-600">Total: $45,996</p>
+                                    </div>
+                                    <button class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 w-full font-medium">
+                                        Reservar ahora
+                                    </button>
+                                    <a href="#" class="text-blue-600 hover:underline text-sm mt-2 text-center">Ver detalles</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Car 3 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden car-card">
+                        <div class="flex flex-col md:flex-row">
+                            <div class="w-full md:w-1/4 p-4">
+                                <div class="car-image-container rounded-lg overflow-hidden">
+                                    <img src="https://placehold.co/400x250?text=Ford+EcoSport" alt="Ford EcoSport rojo modelo 2022 en carretera con montañas de fondo" class="w-full h-full object-cover">
+                                </div>
+                            </div>
+                            
+                            <div class="w-full md:w-2/4 p-4 border-b md:border-b-0 md:border-r">
+                                <div class="flex justify-between items-start mb-2">
+                                    <div>
+                                        <h3 class="font-bold text-lg">Ford EcoSport</h3>
+                                        <p class="text-gray-600">SUV • Automático • Aire acondicionado</p>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <span class="rating-stars">★★★★☆</span>
+                                        <span class="text-gray-600 ml-1">(76)</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="car-features flex space-x-4 my-4">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-user feature-icon"></i>
+                                        <span>5 personas</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-suitcase feature-icon"></i>
+                                        <span>4 maletas</span>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <i class="fas fa-gas-pump feature-icon"></i>
+                                        <span>Full a full</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="text-sm text-gray-600 mb-2">
+                                    <p><i class="fas fa-map-marker-alt text-blue-600 mr-1"></i> Retiro y devolución en Aeropuerto Internacional Ezeiza</p>
+                                </div>
+                                
+                                <div class="text-sm text-gray-600 mb-2 flex items-center">
+                                    <i class="fas fa-shield-alt text-blue-600 mr-1"></i>
+                                    <p>Cancelación gratuita hasta 24 horas antes del retiro</p>
+                                </div>
+                            </div>
+                            
+                            <div class="w-full md:w-1/4 p-4">
+                                <div class="flex flex-col h-full justify-between">
+                                    <div class="text-right">
+                                        <p class="text-2xl font-bold text-blue-600">$13,999 <span class="text-sm font-normal">/día</span></p>
+                                        <p class="text-sm text-gray-600">Total: $55,996</p>
+                                    </div>
+                                    <button class="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 w-full font-medium">
+                                        Reservar ahora
+                                    </button>
+                                    <a href="#" class="text-blue-600 hover:underline text-sm mt-2 text-center">Ver detalles</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div class="bg-white rounded-lg shadow-md p-4 flex justify-center">
+                        <nav class="flex items-center space-x-2">
+                            <button class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-100">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <button class="px-3 py-1 rounded bg-blue-600 text-white">1</button>
+                            <button class="px-3 py-1 rounded border border-gray-300 hover:bg-gray-100">2</button>
+                            <button class="px-3 py-1 rounded border border-gray-300 hover:bg-gray-100">3</button>
+                            <button class="px-3 py-1 rounded border border-gray-300 hover:bg-gray-100">4</button>
+                            <button class="px-3 py-1 rounded border border-gray-300 text-gray-600 hover:bg-gray-100">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </nav>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-100 py-8 mt-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 class="font-bold mb-4">Atención al cliente</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600">Centro de ayuda</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600">Preguntas frecuentes</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600">Contáctanos</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold mb-4">Acerca de Despegar</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600">Quiénes somos</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600">Trabaja con nosotros</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600">Términos y condiciones</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold mb-4">Más servicios</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600">Hoteles</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600">Vuelos</a></li>
+                        <li><a href="#" class="text-gray-600 hover:text-blue-600">Paquetes</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-bold mb-4">Descarga nuestra app</h3>
+                    <div class="flex space-x-2">
+                        <a href="#" class="block">
+                            <img src="https://placehold.co/120x40?text=App+Store" alt="Descargar en App Store" class="h-10">
+                        </a>
+                        <a href="#" class="block">
+                            <img src="https://placehold.co/120x40?text=Google+Play" alt="Disponible en Google Play" class="h-10">
+                        </a>
+                    </div>
+                    
+                    <h3 class="font-bold mt-4 mb-2">Síguenos</h3>
+                    <div class="flex space-x-3">
+                        <a href="#" class="text-gray-600 hover:text-blue-600"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-600 hover:text-blue-600"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-600 hover:text-blue-600"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-300 mt-8 pt-6 text-center text-gray-600 text-sm">
+                <p>© 2023 Despegar.com.ar - Todos los derechos reservados</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Toggle mobile menu
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // Toggle filter sections
+        document.querySelectorAll('.filter-toggle').forEach(toggle => {
+            toggle.addEventListener('click', function() {
+                const section = this.nextElementSibling;
+                this.classList.toggle('collapsed');
+                section.classList.toggle('collapsed');
+                
+                // Change the icon
+                if (this.classList.contains('collapsed')) {
+                    this.lastElementChild.textContent = '+';
+                } else {
+                    this.lastElementChild.textContent = '-';
+                }
+            });
+        });
+        
+        // Sample data for car results (in a real app, this would come from an API)
+        const cars = [
+            {
+                id: 1,
+                name: "Volkswagen Golf",
+                type: "Compacto",
+                transmission: "Automático",
+                image: "https://placehold.co/400x250?text=Volkswagen+Golf",
+                price: 9999,
+                originalPrice: 12999,
+                rating: 5,
+                reviews: 128,
+                passengers: 5,
+                bags: 2,
+                fuel: "Full a full",
+                location: "Aeropuerto Internacional Ezeiza",
+                specialOffer: true
+            },
+            {
+                id: 2,
+                name: "Toyota Corolla",
+                type: "Sedán",
+                transmission: "Automático",
+                image: "https://placehold.co/400x250?text=Toyota+Corolla",
+                price: 11499,
+                rating: 4,
+                reviews: 94,
+                passengers: 5,
+                bags: 3,
+                fuel: "Full a full",
+                location: "Aeropuerto Internacional Ezeiza"
+            },
+            ];
+    </script>
+</body>
+</html>
