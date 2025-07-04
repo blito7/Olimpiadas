@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Globe-co Admin - Panel de Control</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .animate-fade-in { animation: fadeIn 0.5s ease-in-out; }
+        .sidebar { transition: width 0.3s ease; }
+        .table-row-hover:hover { background-color: #f3f4f6; }
+        .hidden-all-sections { display: none; }
+        .modal { display: none; }
+        .modal-open { display: flex !important; }
+        .modal-content {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 90%;
+            animation: fadeIn 0.3s ease-out;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-100 flex min-h-screen">
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar bg-gray-800 text-gray-100 w-64 space-y-6 py-7 px-2 fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-all duration-300 ease-in-out z-50">
+        <div class="flex justify-between items-center px-4">
+            <a href="#" class="text-white flex items-center space-x-2">
+                <i class="fas fa-globe text-blue-400 text-3xl"></i>
+                <span class="text-2xl font-extrabold">Globe-co</span>
+            </a>
+            <button id="sidebar-toggle-close" class="md:hidden text-gray-400 hover:text-white focus:outline-none">
+                <i class="fas fa-times text-2xl"></i>
+            </button>
+        </div>
+        <nav>
+            <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white active:bg-blue-600 active:text-white font-medium" data-section="dashboard"> <i class="fas fa-tachometer-alt mr-3"></i> Dashboard</a>
+            <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white font-medium" data-section="users"><i class="fas fa-users mr-3"></i> Gestión de Usuarios</a>
+            <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white font-medium" data-section="packages"><i class="fas fa-box mr-3"></i> Gestión de Paquetes</a>
+            <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 hover:text-white font-medium" data-section="settings"><i class="fas fa-cogs mr-3"></i> Configuración</a>
+        </nav>
+        <div class="absolute bottom-0 left-0 w-full p-4 border-t border-gray-700">
+            <button id="adminLogoutBtn" class="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition duration-200">
+                <i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión
+            </button>
+        </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <header class="bg-white shadow-sm py-4 px-6 flex justify-between items-center sticky top-0 z-40">
+            <button id="sidebar-toggle-open" class="md:hidden text-gray-600 hover:text-gray-900 focus:outline-none">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+            <h1 class="text-3xl font-extrabold text-gray-800">Panel de Administración</h1>
+            <div class="flex items-center space-x-4" id="adminAuthContainer">
+                <div class="flex items-center space-x-2">
+                    <span id="adminNombre" class="font-medium text-gray-700 hidden sm:block"></span>
+                    <i class="fas fa-user-shield text-blue-600"></i>
+                </div>
+                <button id="adminLoginHeaderBtn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Iniciar Sesión Admin</button>
+            </div>
+        </header>
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 p-6">
+
+            <section id="dashboard-section" class="content-section animate-fade-in hidden-all-sections">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Resumen del Dashboard</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white rounded-lg shadow-md p-6 flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">Usuarios Registrados</p>
+                            <p class="text-3xl font-bold text-blue-600" id="registered-users-count">...</p>
+                        </div>
+                        <i class="fas fa-user-plus text-blue-400 text-4xl opacity-50"></i>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md p-6 flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">Reservas Activas</p>
+                            <p class="text-3xl font-bold text-green-600" id="active-bookings-count">...</p>
+                        </div>
+                        <i class="fas fa-calendar-check text-green-400 text-4xl opacity-50"></i>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-md p-6 flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 text-sm">Ganancias (Mes)</p>
+                            <p class="text-3xl font-bold text-purple-600" id="dashboard-gains">...</p>
+                        </div>
+                        <i class="fas fa-dollar-sign text-purple-400 text-4xl opacity-50"></i>
+                    </div>
+                </div>
+            </section>
+
+            <section id="users-section" class="content-section hidden animate-fade-in hidden-all-sections">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Gestión de Usuarios</h2>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <button id="addUserBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center">
+                            <i class="fas fa-plus mr-2"></i> Añadir Usuario
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nombre</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rol</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="packages-section" class="content-section hidden animate-fade-in hidden-all-sections">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Gestión de Paquetes</h2>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <button id="addPackageBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 flex items-center">
+                            <i class="fas fa-plus mr-2"></i> Añadir Paquete
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nombre</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Descripción</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Precio</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="packages-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <section id="settings-section" class="content-section hidden animate-fade-in hidden-all-sections">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Configuración</h2>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <p>Próximamente...</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODAL ADMIN LOGIN -->
+    <div id="adminLoginModal" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center p-4 z-50">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">Iniciar Sesión Administrador</h3>
+                <button id="closeAdminModalBtn" class="text-gray-500 hover:text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <form id="adminLoginForm">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2">Email</label>
+                    <input type="email" id="adminLoginEmail" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 mb-2">Contraseña</label>
+                    <input type="password" id="adminLoginPassword" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition mb-4">Iniciar Sesión</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL AÑADIR USUARIO -->
+    <div id="addUserModal" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center p-4 z-50">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">Añadir Nuevo Usuario</h3>
+                <button id="closeAddUserModalBtn" class="text-gray-500 hover:text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <form id="addUserForm">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2" for="addUserName">Nombre</label>
+                    <input type="text" id="addUserName" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2" for="addUserEmail">Email</label>
+                    <input type="email" id="addUserEmail" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2" for="addUserPassword">Contraseña</label>
+                    <input type="password" id="addUserPassword" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 mb-2" for="addUserRole">Rol</label>
+                    <select id="addUserRole" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="user">Usuario</option>
+                        <option value="admin">Administrador</option>
+                    </select>
+                </div>
+                <button type="submit" class="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 transition">Guardar Usuario</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL AÑADIR PAQUETE -->
+    <div id="addPackageModal" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center p-4 z-50">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-2xl font-bold">Añadir Nuevo Paquete</h3>
+                <button id="closeAddPackageModalBtn" class="text-gray-500 hover:text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+            </div>
+            <form id="addPackageForm">
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2" for="addPackageName">Nombre del Paquete</label>
+                    <input type="text" id="addPackageName" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-gray-700 mb-2" for="addPackageDescription">Descripción</label>
+                    <textarea id="addPackageDescription" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" rows="3" required></textarea>
+                </div>
+                <div class="mb-6">
+                    <label class="block text-gray-700 mb-2" for="addPackagePrice">Precio</label>
+                    <input type="number" step="0.01" id="addPackagePrice" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <button type="submit" class="w-full bg-green-600 text-white p-3 rounded-lg hover:bg-green-700 transition">Guardar Paquete</button>
+            </form>
+        </div>
+    </div>
+
+<script>
+/* ========== Sidebar ========== */
+document.getElementById('sidebar-toggle-open').onclick = function() {
+    document.getElementById('sidebar').classList.remove('-translate-x-full');
+};
+document.getElementById('sidebar-toggle-close').onclick = function() {
+    document.getElementById('sidebar').classList.add('-translate-x-full');
+};
+
+/* ========== Navegación ========== */
+function showSection(section) {
+    if (localStorage.getItem('admin_isLoggedIn') !== 'true') {
+        alert('Debes iniciar sesión como administrador para acceder a esta sección.');
+        document.getElementById('adminLoginModal').classList.add('modal-open');
+        return;
+    }
+    document.querySelectorAll('.content-section').forEach(sec => sec.classList.add('hidden', 'hidden-all-sections'));
+    document.getElementById(section + '-section').classList.remove('hidden', 'hidden-all-sections');
+    document.getElementById('sidebar').classList.add('-translate-x-full');
+    if (section === 'dashboard') cargarDashboard();
+    if (section === 'users') cargarUsuarios();
+    if (section === 'packages') cargarPaquetes();
+}
+document.querySelectorAll('aside nav a').forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        let sec = link.dataset.section;
+        if (sec) showSection(sec);
+    });
+});
+
+/* ========== Logout ========== */
+document.getElementById('adminLogoutBtn').onclick = async function() {
+    try { await fetch('admin_logout.php', { credentials: 'include' }); } catch {}
+    localStorage.removeItem('admin_isLoggedIn');
+    localStorage.removeItem('admin_email');
+    localStorage.removeItem('admin_nombre');
+    localStorage.removeItem('admin_rol');
+    window.location.href = 'index.html';
+};
+
+/* ========== Login Modal ========== */
+const adminLoginModal = document.getElementById('adminLoginModal');
+const adminLoginHeaderBtn = document.getElementById('adminLoginHeaderBtn');
+const closeAdminModalBtn = document.getElementById('closeAdminModalBtn');
+const adminLoginForm = document.getElementById('adminLoginForm');
+adminLoginHeaderBtn.addEventListener('click', () => { adminLoginModal.classList.add('modal-open'); });
+closeAdminModalBtn.addEventListener('click', () => { adminLoginModal.classList.remove('modal-open'); });
+window.addEventListener('click', (e) => { if(e.target === adminLoginModal) adminLoginModal.classList.remove('modal-open'); });
+
+adminLoginForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const email = document.getElementById('adminLoginEmail').value;
+    const contrasena = document.getElementById('adminLoginPassword').value;
+    try {
+        const res = await fetch('admin_login.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ email, contrasena }),
+            credentials: 'include'
+        });
+        const result = await res.json();
+        if (result.status === 'ok') {
+            localStorage.setItem('admin_isLoggedIn', 'true');
+            localStorage.setItem('admin_nombre', result.nombre);
+            localStorage.setItem('admin_rol', result.rol);
+            localStorage.setItem('admin_email', email);
+            adminLoginModal.classList.remove('modal-open');
+            initializeAdminPanel();
+        } else {
+            alert(result.msg || 'Credenciales de administrador incorrectas.');
+        }
+    } catch (error) {
+        alert('No se pudo conectar al servidor de login de administrador.');
+    }
+});
+
+/* ========== Dashboard ========== */
+async function cargarDashboard() {
+    try {
+        const r = await fetch('admin_dashboard.php', { credentials: 'include' });
+        const d = await r.json();
+        if (d.status === "ok") {
+            document.getElementById('registered-users-count').textContent = d.usuarios || '0';
+            document.getElementById('active-bookings-count').textContent = d.reservas || '0';
+            document.getElementById('dashboard-gains').textContent = "$" + (d.ganancias || "0");
+        } else {
+            if (d.status === 'unauthorized') {
+                alert('Sesión expirada o no autorizada. Por favor, inicia sesión de nuevo.');
+                localStorage.removeItem('admin_isLoggedIn');
+                initializeAdminPanel();
+            } else {
+                alert('No se pudo cargar el dashboard: ' + (d.msg || 'Error desconocido'));
+            }
+        }
+    } catch (error) {
+        alert('No se pudo conectar al servidor para cargar el dashboard.');
+    }
+}
+
+/* ========== Usuarios ========== */
+async function cargarUsuarios() {
+    const tbody = document.getElementById('users-table-body');
+    tbody.innerHTML = '<tr><td colspan="5">Cargando...</td></tr>';
+    try {
+        const r = await fetch('admin_usuarios.php', {
+            method: 'GET',
+            credentials: 'include'
+        });
+        const d = await r.json();
+        if (d.status === "ok") {
+            tbody.innerHTML = '';
+            d.usuarios.forEach(u => {
+                const tr = document.createElement('tr');
+                tr.className = 'table-row-hover';
+                tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">${u.id}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${u.nombre}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${u.email}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${u.rol}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <button onclick="eliminarUsuario(${u.id})" class="text-red-600 hover:text-red-800">Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } else {
+            tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-4 text-center text-red-500">Error al cargar usuarios: ${d.msg || 'Desconocido'}</td></tr>`;
+        }
+    } catch (error) {
+        tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-red-500">Error de conexión al cargar usuarios.</td></tr>';
+    }
+}
+async function eliminarUsuario(id) {
+    if (!confirm("¿Estás seguro de que quieres eliminar este usuario?")) return;
+    try {
+        const r = await fetch('admin_usuario_eliminar.php', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({id}),
+            credentials: 'include'
+        });
+        const d = await r.json();
+        alert(d.msg);
+        if (d.status === "ok") {
+            cargarUsuarios();
+        }
+    } catch {
+        alert('No se pudo conectar al servidor para eliminar el usuario.');
+    }
+}
+
+/* ========== Paquetes ========== */
+async function cargarPaquetes() {
+    const tbody = document.getElementById('packages-table-body');
+    tbody.innerHTML = '<tr><td colspan="5">Cargando...</td></tr>';
+    try {
+        const r = await fetch('admin_paquetes.php', {
+            method: 'GET',
+            credentials: 'include'
+        });
+        const d = await r.json();
+        if (d.status === "ok") {
+            tbody.innerHTML = '';
+            d.paquetes.forEach(p => {
+                const tr = document.createElement('tr');
+                tr.className = 'table-row-hover';
+                tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">${p.id}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${p.nombre}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">${p.descripcion}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">$${p.precio}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <button onclick="eliminarPaquete(${p.id})" class="text-red-600 hover:text-red-800">Eliminar</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } else {
+            tbody.innerHTML = `<tr><td colspan="5" class="px-6 py-4 text-center text-red-500">Error al cargar paquetes: ${d.msg || 'Desconocido'}</td></tr>`;
+        }
+    } catch {
+        tbody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 text-center text-red-500">Error de conexión al cargar paquetes.</td></tr>';
+    }
+}
+async function eliminarPaquete(id) {
+    if (!confirm("¿Estás seguro de que quieres eliminar este paquete?")) return;
+    try {
+        const r = await fetch('admin_paquete_eliminar.php', {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({id}),
+            credentials: 'include'
+        });
+        const d = await r.json();
+        alert(d.msg);
+        if (d.status === "ok") {
+            cargarPaquetes();
+        }
+    } catch {
+        alert('No se pudo conectar al servidor para eliminar el paquete.');
+    }
+}
+
+/* ========== Añadir Usuario ========== */
+const addUserModal = document.getElementById('addUserModal');
+const addUserBtn = document.getElementById('addUserBtn');
+const closeAddUserModalBtn = document.getElementById('closeAddUserModalBtn');
+const addUserForm = document.getElementById('addUserForm');
+addUserBtn.addEventListener('click', () => { addUserModal.classList.add('modal-open'); });
+closeAddUserModalBtn.addEventListener('click', () => { addUserModal.classList.remove('modal-open'); addUserForm.reset(); });
+window.addEventListener('click', (e) => { if(e.target === addUserModal) { addUserModal.classList.remove('modal-open'); addUserForm.reset(); } });
+addUserForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const nombre = document.getElementById('addUserName').value;
+    const email = document.getElementById('addUserEmail').value;
+    const contrasena = document.getElementById('addUserPassword').value;
+    const rol = document.getElementById('addUserRole').value;
+    try {
+        const res = await fetch('admin_usuario_agregar.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ nombre, email, contrasena, rol }),
+            credentials: 'include'
+        });
+        const result = await res.json();
+        alert(result.msg);
+        if (result.status === 'ok') {
+            addUserModal.classList.remove('modal-open');
+            addUserForm.reset();
+            cargarUsuarios();
+        }
+    } catch {
+        alert('No se pudo conectar al servidor para añadir el usuario.');
+    }
+});
+
+/* ========== Añadir Paquete ========== */
+const addPackageModal = document.getElementById('addPackageModal');
+const addPackageBtn = document.getElementById('addPackageBtn');
+const closeAddPackageModalBtn = document.getElementById('closeAddPackageModalBtn');
+const addPackageForm = document.getElementById('addPackageForm');
+addPackageBtn.addEventListener('click', () => { addPackageModal.classList.add('modal-open'); });
+closeAddPackageModalBtn.addEventListener('click', () => { addPackageModal.classList.remove('modal-open'); addPackageForm.reset(); });
+window.addEventListener('click', (e) => { if(e.target === addPackageModal) { addPackageModal.classList.remove('modal-open'); addPackageForm.reset(); } });
+addPackageForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const nombre = document.getElementById('addPackageName').value;
+    const descripcion = document.getElementById('addPackageDescription').value;
+    const precio = document.getElementById('addPackagePrice').value;
+    try {
+        const res = await fetch('admin_paquete_agregar.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ nombre, descripcion, precio }),
+            credentials: 'include'
+        });
+        const result = await res.json();
+        alert(result.msg);
+        if (result.status === 'ok') {
+            addPackageModal.classList.remove('modal-open');
+            addPackageForm.reset();
+            cargarPaquetes();
+        }
+    } catch {
+        alert('No se pudo conectar al servidor para añadir el paquete.');
+    }
+});
+
+/* ========== Helpers Globales ========== */
+window.eliminarUsuario = eliminarUsuario;
+window.eliminarPaquete = eliminarPaquete;
+
+function initializeAdminPanel() {
+    const adminNombreSpan = document.getElementById('adminNombre');
+    const adminLoginButton = document.getElementById('adminLoginHeaderBtn');
+    const allContentSections = document.querySelectorAll('.content-section');
+    const isLoggedIn = localStorage.getItem('admin_isLoggedIn') === 'true';
+    const adminName = localStorage.getItem('admin_nombre');
+
+    allContentSections.forEach(sec => sec.classList.add('hidden-all-sections'));
+
+    if (isLoggedIn) {
+        adminNombreSpan.textContent = adminName ? `¡Hola, ${adminName}!` : '¡Hola, Admin!';
+        adminNombreSpan.classList.remove('hidden');
+        adminLoginButton.classList.add('hidden');
+        document.getElementById('dashboard-section').classList.remove('hidden-all-sections');
+        cargarDashboard();
+    } else {
+        adminNombreSpan.textContent = '';
+        adminNombreSpan.classList.add('hidden');
+        adminLoginButton.classList.remove('hidden');
+        adminLoginModal.classList.add('modal-open');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', initializeAdminPanel);
+</script>
+</body>
+</html>

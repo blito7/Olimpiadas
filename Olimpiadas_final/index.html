@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Globe-co.com - Tu agencia de viajes online</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .animate-fade-in { animation: fadeIn 0.5s ease-in-out; }
+        .tab-active {
+            background-color: #3B82F6 !important;
+            color: white !important;
+            border-radius: 0.5rem 0.5rem 0 0;
+            box-shadow: 0 2px 8px rgba(59,130,246,0.08);
+        }
+        .tab-btn {
+            background: white;
+            transition: background 0.2s, color 0.2s;
+        }
+        .tab-btn:not(.tab-active):hover {
+            background: #e0e7ff;
+            color: #3B82F6;
+        }
+        .flight-card:hover, .hotel-card:hover, .package-card:hover, .auto-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.10);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .modal { display: none; }
+        .modal-open { display: flex; }
+    </style>
+</head>
+<body class="font-sans bg-gray-50">
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="text-blue-600 font-bold text-2xl">Globe-co</div>
+            <nav class="hidden md:flex space-x-6">
+                <a href="index.html" class="text-blue-600 font-medium">Inicio</a>
+                <a href="vuelos.html" class="text-gray-700 hover:text-blue-600 font-medium">Vuelos</a>
+                <a href="hoteles.html" class="text-gray-700 hover:text-blue-600 font-medium">Hoteles</a>
+                <a href="paquetes.html" class="text-gray-700 hover:text-blue-600 font-medium">Paquetes</a>
+                <a href="autos.html" class="text-gray-700 hover:text-blue-600 font-medium">Autos</a>
+                <a href="carrito.html" class="relative text-blue-600 font-medium ml-6">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-item-count" class="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+                </a>
+            </nav>
+            <div class="flex items-center space-x-4" id="authContainer">
+                <div class="hidden md:block">
+                    <button class="bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200">
+                       <i class="fas fa-phone-alt mr-2"></i> Atención al cliente
+                    </button>
+                </div>
+                <button id="loginBtn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Ingresar</button>
+            </div>
+        </div>
+    </header>
+
+    <section class="bg-gradient-to-b from-blue-700 to-blue-500 text-white pt-10 pb-4 mb-6 shadow-lg">
+        <div class="container mx-auto px-4 flex flex-col items-center">
+            <h1 class="text-3xl md:text-4xl font-extrabold mb-3 text-center">Explora y reservá tu viaje ideal</h1>
+            <div class="flex space-x-2 mt-6 bg-white rounded-lg shadow p-1">
+                <button class="tab-btn tab-active px-6 py-2 font-semibold text-blue-700" data-section="paquetes"><i class="fa fa-suitcase-rolling mr-2"></i>Paquetes</button>
+                <button class="tab-btn px-6 py-2 font-semibold text-blue-700" data-section="vuelos"><i class="fa fa-plane-departure mr-2"></i>Vuelos</button>
+                <button class="tab-btn px-6 py-2 font-semibold text-blue-700" data-section="hoteles"><i class="fa fa-hotel mr-2"></i>Hoteles</button>
+                <button class="tab-btn px-6 py-2 font-semibold text-blue-700" data-section="autos"><i class="fa fa-car mr-2"></i>Autos</button>
+            </div>
+        </div>
+    </section>
+
+    <main class="container mx-auto px-4 pb-10 animate-fade-in">
+        <div id="section-paquetes" class="tab-section">
+            <h2 class="text-2xl font-bold mb-6 text-blue-700">Paquetes destacados</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="package-card bg-white rounded-xl overflow-hidden shadow hover:shadow-xl relative" data-id="1">
+                    <img src="https://viajes.lanacion.com.ar/wp-content/uploads/2021/07/viajar-a-paris.jpg" alt="París Premium" class="w-full h-48 object-cover">
+                    <div class="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-lg font-bold">$224.000</div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">París Premium</h3>
+                        <p class="mb-4 text-gray-600">Vuelo+Hotel 7 noches. City tour y cenas incluidas.</p>
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 btnAgregarCarrito w-full" data-id="1">Agregar al carrito</button>
+                    </div>
+                </div>
+                <div class="package-card bg-white rounded-xl overflow-hidden shadow hover:shadow-xl relative" data-id="2">
+                    <img src="https://assets.elgourmet.com/wp-content/uploads/2023/03/istock_1388147814_portada.jpg" alt="NY Experience" class="w-full h-48 object-cover">
+                    <div class="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-lg font-bold">$195.000</div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">NY Experience</h3>
+                        <p class="mb-4 text-gray-600">5 noches en Manhattan + vuelos y traslados.</p>
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 btnAgregarCarrito w-full" data-id="2">Agregar al carrito</button>
+                    </div>
+                </div>
+                <div class="package-card bg-white rounded-xl overflow-hidden shadow hover:shadow-xl relative" data-id="3">
+                    <img src="https://www.state.gov/wp-content/uploads/2023/07/shutterstock_1495908284c-scaled.jpg" alt="Machu Picchu" class="w-full h-48 object-cover">
+                    <div class="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-lg font-bold">$110.000</div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-900 mb-2">Machu Picchu Aventura</h3>
+                        <p class="mb-4 text-gray-600">4 noches. Excursiones y hotel en Cuzco.</p>
+                        <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 btnAgregarCarrito w-full" data-id="3">Agregar al carrito</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="section-vuelos" class="tab-section hidden">
+            <div class="flex flex-col items-center justify-center py-20">
+                <i class="fa fa-plane text-blue-600 text-5xl mb-4"></i>
+                <h2 class="text-2xl font-bold text-blue-700 mb-2">¡Próximamente disponible!</h2>
+                <p class="text-gray-600 text-lg">Estamos trabajando para ofrecerte los mejores vuelos. ¡Vuelve pronto!</p>
+            </div>
+        </div>
+        <div id="section-hoteles" class="tab-section hidden">
+            <div class="flex flex-col items-center justify-center py-20">
+                <i class="fa fa-hotel text-blue-600 text-5xl mb-4"></i>
+                <h2 class="text-2xl font-bold text-blue-700 mb-2">¡Próximamente disponible!</h2>
+                <p class="text-gray-600 text-lg">Muy pronto vas a poder reservar hoteles desde Globe-co.</p>
+            </div>
+        </div>
+        <div id="section-autos" class="tab-section hidden">
+            <div class="flex flex-col items-center justify-center py-20">
+                <i class="fa fa-car text-blue-600 text-5xl mb-4"></i>
+                <h2 class="text-2xl font-bold text-blue-700 mb-2">¡Próximamente disponible!</h2>
+                <p class="text-gray-600 text-lg">La reserva de autos estará muy pronto habilitada.</p>
+            </div>
+        </div>
+    </main>
+
+    <div id="loginModal" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full animate-fade-in">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-2xl font-bold">Iniciar sesión</h3>
+                    <button id="closeModalBtn" class="text-gray-500 hover:text-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <form id="loginForm">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Email</label>
+                        <input type="email" id="loginEmail" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-700 mb-2">Contraseña</label>
+                        <input type="password" id="loginPassword" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition mb-4">Iniciar sesión</button>
+                    <div class="text-center">
+                        <p class="text-gray-600">¿No tienes una cuenta? <a href="registro.html" class="text-blue-600 hover:underline">Regístrate</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tabs visuales y filtrado
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('tab-active'));
+                btn.classList.add('tab-active');
+                document.querySelectorAll('.tab-section').forEach(sec => sec.classList.add('hidden'));
+                document.getElementById('section-' + btn.dataset.section).classList.remove('hidden');
+            });
+        });
+
+        // Login modal
+        const loginModal = document.getElementById('loginModal');
+        const loginBtn = document.getElementById('loginBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        loginBtn.addEventListener('click', () => { loginModal.classList.add('modal-open'); });
+        closeModalBtn.addEventListener('click', () => { loginModal.classList.remove('modal-open'); });
+        window.addEventListener('click', (e) => { if(e.target === loginModal) loginModal.classList.remove('modal-open'); });
+
+        // LOGIN REAL
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const contrasena = document.getElementById('loginPassword').value;
+            const res = await fetch('login.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ email, contrasena })
+            });
+            const result = await res.json();
+            if (result.status === 'ok') {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userEmail', email);
+                localStorage.setItem('userRole', result.rol);
+                localStorage.setItem('userName', result.nombre);
+                localStorage.setItem('usuarioId', result.usuario_id);
+                loginModal.classList.remove('modal-open');
+                
+                // Redirigir si la contraseña es admin_
+                if (contrasena.startsWith('admin_')) {
+                    window.location.href = 'abm.html';
+                } else {
+                    window.location.reload();
+                }
+            } else {
+                alert(result.msg);
+            }
+        });
+
+        // Mostrar usuario logueado en header
+        function updateLoginUI() {
+            const loginBtn = document.getElementById('loginBtn');
+            const authContainer = document.getElementById('authContainer');
+            const userName = localStorage.getItem('userName');
+            if (localStorage.getItem('isLoggedIn') === 'true' && userName) {
+                if (loginBtn) loginBtn.style.display = 'none';
+                if (authContainer) {
+                    const existingWelcome = authContainer.querySelector('.text-gray-700.font-medium.mr-4');
+                    const existingLogoutBtn = authContainer.querySelector('.bg-red-500');
+                    if (existingWelcome) existingWelcome.remove();
+                    if (existingLogoutBtn) existingLogoutBtn.remove();
+                    const welcome = document.createElement('span');
+                    welcome.textContent = `¡Hola, ${userName}!`;
+                    welcome.className = 'text-gray-700 font-medium mr-4';
+                    authContainer.insertBefore(welcome, authContainer.firstChild);
+                    const logoutBtn = document.createElement('button');
+                    logoutBtn.textContent = 'Cerrar Sesión';
+                    logoutBtn.className = 'bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600';
+                    logoutBtn.onclick = function() { localStorage.clear(); window.location.href = 'index.html'; };
+                    authContainer.appendChild(logoutBtn);
+                }
+            } else {
+                if (loginBtn) loginBtn.style.display = 'block';
+            }
+        }
+        updateLoginUI();
+
+        // Carrito: contador en header y agregar
+        function updateCartIcon() {
+            const usuarioId = localStorage.getItem('usuarioId');
+            const cartIconSpan = document.getElementById('cart-item-count');
+            if (!usuarioId) { cartIconSpan.textContent = 0; cartIconSpan.classList.add('hidden'); return; }
+            fetch('obtener_carrito.php', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({ usuario_id: usuarioId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (cartIconSpan) {
+                    if (data.status === 'ok' && data.carrito.length > 0) {
+                        let total = 0;
+                        data.carrito.forEach(item => total += parseInt(item.cantidad));
+                        cartIconSpan.textContent = total;
+                        cartIconSpan.classList.remove('hidden');
+                    } else {
+                        cartIconSpan.textContent = 0;
+                        cartIconSpan.classList.add('hidden');
+                    }
+                }
+            })
+            .catch(() => { cartIconSpan.textContent = 0; cartIconSpan.classList.add('hidden'); });
+        }
+        updateCartIcon();
+
+        // Agregar al carrito
+        document.addEventListener('click', function(e) {
+            if(e.target.classList.contains('btnAgregarCarrito')) {
+                const paquete_id = e.target.getAttribute('data-id');
+                const usuario_id = localStorage.getItem('usuarioId');
+                if (!usuario_id) {
+                    alert("Debes iniciar sesión para agregar al carrito.");
+                    loginModal.classList.add('modal-open');
+                    return;
+                }
+                fetch('agregar_al_carrito.php', {
+                    method: 'POST',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({ usuario_id, paquete_id, cantidad: 1 })
+                })
+                .then(r => r.json())
+                .then(result => {
+                    alert(result.msg);
+                    if(result.status === 'ok') updateCartIcon();
+                });
+            }
+        });
+    </script>
+</body>
+</html>

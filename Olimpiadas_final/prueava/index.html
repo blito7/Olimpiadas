@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Globe-co.com - Tu agencia de viajes online</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .flight-card:hover, .hotel-card:hover, .package-card:hover {
+            transform: translateY(-5px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab-active {
+            border-bottom: 3px solid #3B82F6;
+            color: #3B82F6;
+        }
+        
+        .modal {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        .modal-open {
+            display: flex;
+        }
+    </style>
+</head>
+<body class="font-sans bg-gray-100">
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="text-blue-600 font-bold text-2xl">Globe-co</div>
+            
+            <nav class="hidden md:flex space-x-6">
+                <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium">Inicio</a>
+                <a href="vuelos.html" class="text-gray-700 hover:text-blue-600 font-medium">Vuelos</a>
+                <a href="hoteles.html" class="text-gray-700 hover:text-blue-600 font-medium">Hoteles</a>
+                <a href="paquetes.html" class="text-gray-700 hover:text-blue-600 font-medium">Paquetes</a>
+                <a href="autos.html" class="text-gray-700 hover:text-blue-600 font-medium">Autos</a>
+                
+                <a href="carrito.html" class="relative text-gray-700 hover:text-blue-600 font-medium">
+                    <i class="fas fa-shopping-cart"></i> Carrito
+                    <span id="cart-item-count" class="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">
+                        0
+                    </span>
+                </a>
+            </nav>
+            
+            <div class="flex items-center space-x-4" id="authContainer">
+                <div class="hidden md:block">
+                    <button class="bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200">
+                       <i class="fas fa-phone-alt mr-2"></i> Atención al cliente
+                    </button>
+                </div>
+                <button id="loginBtn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    Ingresar
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="bg-blue-700 text-white py-20 px-4 text-center">
+            <h1 class="text-5xl font-extrabold mb-4 animate-fade-in">Descubre tu próximo destino</h1>
+            <p class="text-xl mb-8 animate-fade-in">Explora las mejores ofertas en vuelos, hoteles y paquetes turísticos.</p>
+            <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-lg">
+                <div class="flex justify-center border-b border-gray-200 mb-6">
+                    <button class="tab-button px-6 py-3 text-lg font-semibold text-gray-700 hover:text-blue-600 tab-active" data-tab="flights">
+                        <i class="fas fa-plane mr-2"></i> Vuelos
+                    </button>
+                    <button class="tab-button px-6 py-3 text-lg font-semibold text-gray-700 hover:text-blue-600" data-tab="hotels">
+                        <i class="fas fa-hotel mr-2"></i> Hoteles
+                    </button>
+                    <button class="tab-button px-6 py-3 text-lg font-semibold text-gray-700 hover:text-blue-600" data-tab="packages">
+                        <i class="fas fa-box-open mr-2"></i> Paquetes
+                    </button>
+                </div>
+                <div id="flights-tab" class="tab-content">
+                    <form class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <input type="text" placeholder="Origen" class="p-3 border border-gray-300 rounded-lg">
+                        <input type="text" placeholder="Destino" class="p-3 border border-gray-300 rounded-lg">
+                        <input type="date" class="p-3 border border-gray-300 rounded-lg">
+                        <button class="bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700">Buscar Vuelos</button>
+                    </form>
+                </div>
+                <div id="hotels-tab" class="tab-content hidden">
+                    <form class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <input type="text" placeholder="Destino" class="p-3 border border-gray-300 rounded-lg">
+                        <input type="date" class="p-3 border border-gray-300 rounded-lg">
+                        <input type="date" class="p-3 border border-gray-300 rounded-lg">
+                        <button class="bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700">Buscar Hoteles</button>
+                    </form>
+                </div>
+                <div id="packages-tab" class="tab-content hidden">
+                    <form class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <input type="text" placeholder="Destino del Paquete" class="p-3 border border-gray-300 rounded-lg">
+                        <input type="date" class="p-3 border border-gray-300 rounded-lg">
+                        <input type="number" placeholder="Nº Personas" class="p-3 border border-gray-300 rounded-lg min="1">
+                        <button class="bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700">Buscar Paquetes</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section class="container mx-auto px-4 py-16">
+            <h2 class="text-3xl font-bold text-gray-800 text-center mb-10">Destinos Populares</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white rounded-lg shadow-md overflow-hidden animate-fade-in package-card">
+                    <img src="https://via.placeholder.com/400x250/FF5733/FFFFFF?text=Paris" alt="París" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">París, Francia</h3>
+                        <p class="text-gray-600 mb-4">La ciudad de la luz, el amor y la Torre Eiffel.</p>
+                        <a href="paquetes.html" class="inline-block bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition">Ver Paquetes</a>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md overflow-hidden animate-fade-in package-card">
+                    <img src="https://via.placeholder.com/400x250/33FF57/FFFFFF?text=Tokio" alt="Tokio" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Tokio, Japón</h3>
+                        <p class="text-gray-600 mb-4">Metrópolis vibrante con una mezcla única de tradición y modernidad.</p>
+                        <a href="paquetes.html" class="inline-block bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition">Ver Paquetes</a>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md overflow-hidden animate-fade-in package-card">
+                    <img src="https://via.placeholder.com/400x250/3357FF/FFFFFF?text=Machu+Picchu" alt="Machu Picchu" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Machu Picchu, Perú</h3>
+                        <p class="text-gray-600 mb-4">Antigua ciudad inca, maravilla arqueológica.</p>
+                        <a href="paquetes.html" class="inline-block bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition">Ver Paquetes</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-blue-100 py-16 px-4">
+            <div class="container mx-auto text-center">
+                <h2 class="text-3xl font-bold text-gray-800 mb-10">¿Por qué elegir Globe-co?</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="p-6 bg-white rounded-lg shadow-md animate-fade-in">
+                        <i class="fas fa-globe-americas text-blue-600 text-5xl mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Amplia Selección</h3>
+                        <p class="text-gray-600">Miles de destinos y opciones de viaje para todos los gustos.</p>
+                    </div>
+                    <div class="p-6 bg-white rounded-lg shadow-md animate-fade-in">
+                        <i class="fas fa-hand-holding-usd text-blue-600 text-5xl mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Mejores Precios</h3>
+                        <p class="text-gray-600">Garantía de precios competitivos y ofertas exclusivas.</p>
+                    </div>
+                    <div class="p-6 bg-white rounded-lg shadow-md animate-fade-in">
+                        <i class="fas fa-headset text-blue-600 text-5xl mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Soporte 24/7</h3>
+                        <p class="text-gray-600">Asistencia constante para tu tranquilidad antes, durante y después del viaje.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <h4 class="font-bold text-lg mb-4">Globe-co</h4>
+                <p class="text-gray-400 text-sm">Tu compañero de viajes ideal. Ofreciendo las mejores experiencias alrededor del mundo.</p>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg mb-4">Enlaces Rápidos</h4>
+                <ul>
+                    <li class="mb-2"><a href="index.html" class="text-gray-400 hover:text-white">Inicio</a></li>
+                    <li class="mb-2"><a href="vuelos.html" class="text-gray-400 hover:text-white">Vuelos</a></li>
+                    <li class="mb-2"><a href="hoteles.html" class="text-gray-400 hover:text-white">Hoteles</a></li>
+                    <li class="mb-2"><a href="paquetes.html" class="text-gray-400 hover:text-white">Paquetes</a></li>
+                    <li class="mb-2"><a href="autos.html" class="text-gray-400 hover:text-white">Autos</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg mb-4">Contacto</h4>
+                <p class="text-gray-400 text-sm"><i class="fas fa-map-marker-alt mr-2"></i> Calle Falsa 123, Ciudad Autónoma de Buenos Aires</p>
+                <p class="text-gray-400 text-sm mt-2"><i class="fas fa-phone mr-2"></i> +54 9 11 1234 5678</p>
+                <p class="text-gray-400 text-sm mt-2"><i class="fas fa-envelope mr-2"></i> info@globeco.com</p>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg mb-4">Síguenos</h4>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white text-2xl"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white text-2xl"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white text-2xl"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white text-2xl"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="text-center text-gray-500 text-sm mt-8 border-t border-gray-700 pt-4">
+            &copy; 2024 Globe-co. Todos los derechos reservados.
+        </div>
+    </footer>
+
+    <div id="loginModal" class="modal fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg shadow-xl max-w-md w-full relative">
+            <button id="closeModalBtn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl">
+                <i class="fas fa-times"></i>
+            </button>
+            <h2 class="text-3xl font-bold text-center text-gray-800 mb-6">Iniciar Sesión</h2>
+            <form id="loginForm">
+                <div class="mb-4">
+                    <label for="loginEmail" class="block text-gray-700 text-sm font-medium mb-2">Correo Electrónico</label>
+                    <input type="email" id="loginEmail" name="email" required class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="mb-6">
+                    <label for="loginPassword" class="block text-gray-700 text-sm font-medium mb-2">Contraseña</label>
+                    <input type="password" id="loginPassword" name="contrasena" required class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <a href="#" class="text-sm text-blue-600 hover:underline">¿Olvidaste tu contraseña?</a>
+                </div>
+                <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition mb-4">Iniciar sesión</button>
+                <div class="text-center">
+                    <p class="text-gray-600">¿No tienes una cuenta? <a href="registro.html" class="text-blue-600 hover:underline">Regístrate</a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const loginModal = document.getElementById('loginModal');
+        const loginBtn = document.getElementById('loginBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const loginForm = document.getElementById('loginForm');
+        const authContainer = document.getElementById('authContainer'); // Para actualizar el UI del login/bienvenida
+
+        loginBtn.addEventListener('click', () => {
+            loginModal.classList.remove('hidden');
+            loginModal.classList.add('modal-open');
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            loginModal.classList.add('hidden');
+            loginModal.classList.remove('modal-open');
+        });
+
+        window.addEventListener('click', (e) => {
+            if(e.target === loginModal) {
+                loginModal.classList.remove('modal-open');
+            }
+        });
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            // In a real application, ensure 'login.php' is accessible on your server.
+            // This 'fetch' call requires a running server with 'login.php' handling the request.
+            try {
+                const response = await fetch('login.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'ok') {
+                    // Store login status, user email, user role, and user name in localStorage
+                    localStorage.setItem('isLoggedIn', 'true');
+                    localStorage.setItem('userEmail', email); // Keep user email if needed for other purposes
+                    localStorage.setItem('userRole', result.rol); // Store the role
+                    localStorage.setItem('userName', result.nombre); // Store the user's name
+
+                    if (result.rol === 'admin') {
+                        // Admin users go to admin.html
+                        window.location.href = 'admin.html'; // Changed from 'administrador.html' to 'admin.html' based on your file name
+                    } else {
+                        // Regular users stay on index.html or go to a user dashboard
+                        window.location.href = 'index.html';
+                        // No need to call updateLoginUI directly here, it will be called on page load
+                    }
+                } else {
+                    alert(result.msg); // Muestra error si no se pudo loguear
+                }
+            } catch (error) {
+                console.error('Error durante la solicitud de login:', error);
+                alert('Ocurrió un error al intentar iniciar sesión. Por favor, inténtalo de nuevo más tarde.');
+            }
+        });
+
+        // Function to update the login UI (e.g., replace login button with welcome message)
+        function updateLoginUI() {
+            const userName = localStorage.getItem('userName');
+            const userEmail = localStorage.getItem('userEmail'); // Keep for backward compatibility if needed
+            
+            if (localStorage.getItem('isLoggedIn') === 'true' && userName) {
+                loginBtn.style.display = 'none'; // Hide the login button
+
+                const welcomeMessage = document.createElement('span');
+                welcomeMessage.className = 'text-gray-700 font-medium mr-4';
+                welcomeMessage.textContent = `¡Hola, ${userName}!`; 
+                authContainer.insertBefore(welcomeMessage, authContainer.children[0]);
+
+                // Add logout button
+                const logoutButton = document.createElement('button');
+                logoutButton.id = 'logoutBtn';
+                logoutButton.className = 'bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600';
+                logoutButton.textContent = 'Cerrar Sesión';
+                authContainer.appendChild(logoutButton);
+
+                logoutButton.addEventListener('click', () => {
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('userEmail');
+                    localStorage.removeItem('userRole');
+                    localStorage.removeItem('userName'); // Remove user name on logout
+                    alert('Sesión cerrada.');
+                    window.location.href = 'index.html'; // Redirect to clear UI
+                });
+            } else {
+                // If not logged in or no name, ensure login button is visible
+                loginBtn.style.display = 'block';
+            }
+        }
+
+        // Check login status and update UI on page load
+        updateLoginUI();
+
+
+        // Función para actualizar el icono del carrito en el header
+        function updateCartIcon() {
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const cartTotalItems = cart.reduce((total, item) => total + item.quantity, 0);
+            const cartIconSpan = document.getElementById('cart-item-count');
+            if (cartIconSpan) {
+                cartIconSpan.textContent = cartTotalItems;
+                if (cartTotalItems > 0) {
+                    cartIconSpan.classList.remove('hidden'); // Asegurarse de que esté visible si hay ítems
+                } else {
+                    cartIconSpan.classList.add('hidden'); // Ocultar si no hay ítems
+                }
+            }
+        }
+
+        // Llamar a la función al cargar la página para inicializar el contador
+        updateCartIcon();
+    </script>
+</body>
+</html>

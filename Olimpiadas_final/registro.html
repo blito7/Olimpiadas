@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro | TuAgenciaDeViajes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .modal {
+            display: none;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            pointer-events: none;
+        }
+
+        .modal.flex {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="text-blue-600 font-bold text-2xl">Globe-co</div>
+            
+            <nav class="hidden md:flex space-x-6">
+                <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium">Inicio</a>
+                <a href="vuelos.html" class="text-gray-700 hover:text-blue-600 font-medium">Vuelos</a>
+                <a href="hoteles.html" class="text-gray-700 hover:text-blue-600 font-medium">Hoteles</a>
+                <a href="paquetes.html" class="text-gray-700 hover:text-blue-600 font-medium">Paquetes</a>
+                <a href="autos.html" class="text-gray-700 hover:text-blue-600 font-medium">Autos</a>
+                
+                <a href="carrito.html" class="relative text-gray-700 hover:text-blue-600 font-medium">
+                    <i class="fas fa-shopping-cart"></i> Carrito
+                    <span id="cart-item-count" class="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">
+                        0
+                    </span>
+                </a>
+            </nav>
+            
+            <div class="flex items-center space-x-4" id="authContainer">
+                <div class="hidden md:block">
+                    <button class="bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200">
+                       <i class="fas fa-phone-alt mr-2"></i> Atención al cliente
+                    </button>
+                </div>
+                <button id="loginBtn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    Ingresar
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 flex justify-center items-center min-h-[calc(100vh-200px)]">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md animate-fade-in">
+            <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Crear una Cuenta</h2>
+            <form id="registroForm" class="space-y-4">
+                <div>
+                    <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre Completo</label>
+                    <input type="text" id="nombre" name="nombre" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Tu Nombre" required>
+                </div>
+                <div>
+                    <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Correo Electrónico</label>
+                    <input type="email" id="email" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="tu@ejemplo.com" required>
+                </div>
+                <div>
+                    <label for="contrasena" class="block text-gray-700 text-sm font-bold mb-2">Contraseña</label>
+                    <input type="password" id="contrasena" name="contrasena" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="********" required>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full transition-colors">
+                        Registrarme
+                    </button>
+                </div>
+                <p class="text-center text-gray-600 text-sm mt-4">
+                    ¿Ya tienes cuenta? <a href="index.html" class="text-blue-600 hover:text-blue-800 font-bold">Inicia sesión aquí</a>.
+                </p>
+            </form>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8 px-4 mt-12">
+        <div class="container mx-auto flex flex-wrap justify-between items-center text-center md:text-left">
+            <div class="w-full md:w-1/3 mb-6 md:mb-0">
+                <h3 class="text-xl font-bold mb-2">TuAgenciaDeViajes</h3>
+                <p class="text-gray-400">Tu compañero de viaje ideal.</p>
+            </div>
+            <div class="w-full md:w-1/3 mb-6 md:mb-0">
+                <h3 class="text-lg font-semibold mb-2">Enlaces Rápidos</h3>
+                <ul>
+                    <li><a href="index.html" class="text-gray-400 hover:text-white">Inicio</a></li>
+                    <li><a href="paquetes.html" class="text-gray-400 hover:text-white">Paquetes</a></li>
+                    <li><a href="vuelos.html" class="text-gray-400 hover:text-white">Vuelos</a></li>
+                    <li><a href="hoteles.html" class="text-gray-400 hover:text-white">Hoteles</a></li>
+                </ul>
+            </div>
+            <div class="w-full md:w-1/3">
+                <h3 class="text-lg font-semibold mb-2">Síguenos</h3>
+                <div class="flex justify-center md:justify-start space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="text-center text-gray-500 text-sm mt-8">
+            &copy; 2023 TuAgenciaDeViajes. Todos los derechos reservados.
+        </div>
+    </footer>
+    
+    <div id="loginModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-50">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md animate-fade-in">
+            <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Iniciar Sesión</h2>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label for="loginEmail" class="block text-gray-700 text-sm font-bold mb-2">Correo Electrónico</label>
+                    <input type="email" id="loginEmail" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="tu@ejemplo.com" required>
+                </div>
+                <div>
+                    <label for="loginPassword" class="block text-gray-700 text-sm font-bold mb-2">Contraseña</label>
+                    <input type="password" id="loginPassword" name="contrasena" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="********" required>
+                </div>
+                <div class="flex items-center justify-between">
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full transition-colors">
+                        Ingresar
+                    </button>
+                </div>
+                <p class="text-center text-gray-600 text-sm mt-4">
+                    ¿No tienes cuenta? <a href="registro.html" class="text-blue-600 hover:text-blue-800 font-bold">Regístrate aquí</a>.
+                </p>
+            </form>
+            <button id="closeModalBtn" class="absolute top-3 right-3 text-gray-600 hover:text-gray-900 text-2xl">&times;</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Manejo del modal de login (copiado desde index.html para consistencia)
+            const loginModal = document.getElementById('loginModal');
+            const loginBtn = document.getElementById('loginBtn');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+
+            if (loginBtn) {
+                loginBtn.addEventListener('click', () => {
+                    loginModal.classList.remove('hidden');
+                    loginModal.classList.add('flex'); // Usar flex para centrar
+                });
+            }
+
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', () => {
+                    loginModal.classList.add('hidden');
+                    loginModal.classList.remove('flex');
+                });
+            }
+
+            window.addEventListener('click', (e) => {
+                if (e.target === loginModal) {
+                    loginModal.classList.add('hidden');
+                    loginModal.classList.remove('flex');
+                }
+            });
+
+            // LOGIN logic (if a user logs in from the registration page modal)
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    const email = document.getElementById('loginEmail').value;
+                    const contrasena = document.getElementById('loginPassword').value;
+                    const res = await fetch('login.php', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({email, contrasena})
+                    });
+                    const result = await res.json();
+                    if (result.status === 'ok') {
+                        localStorage.setItem('isLoggedIn', 'true');
+                        localStorage.setItem('userEmail', email);
+                        localStorage.setItem('userRole', result.rol);
+                        localStorage.setItem('userName', result.nombre);
+                        localStorage.setItem('usuarioId', result.usuario_id);
+                        window.location.href = (result.rol === 'admin') ? 'admin.html' : 'index.html';
+                    } else {
+                        alert(result.msg);
+                    }
+                });
+            }
+
+            // REGISTRO real
+            document.getElementById('registroForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const nombre = document.getElementById('nombre').value;
+                const email = document.getElementById('email').value;
+                const contrasena = document.getElementById('contrasena').value;
+
+                const response = await fetch('registro.php', {
+                    method: 'POST',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({nombre, email, contrasena})
+                });
+                const result = await response.json();
+                if(result.status === 'ok') {
+                    alert('¡Registro exitoso!');
+                    window.location.href = 'index.html';
+                } else {
+                    alert(result.msg);
+                }
+            });
+
+            // Función para actualizar el icono del carrito en el header (copiado para consistencia)
+            function updateCartIcon() {
+                const usuarioId = localStorage.getItem('usuarioId');
+                const cartIconSpan = document.getElementById('cart-item-count');
+                if (!usuarioId) {
+                    if (cartIconSpan) {
+                        cartIconSpan.textContent = 0;
+                        cartIconSpan.classList.add('hidden');
+                    }
+                    return;
+                }
+                fetch('obtener_carrito.php', {
+                    method: 'POST',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({usuario_id: usuarioId})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (cartIconSpan) {
+                        if (data.status === 'ok' && data.carrito.length > 0) {
+                            let total = 0;
+                            data.carrito.forEach(item => total += parseInt(item.cantidad));
+                            cartIconSpan.textContent = total;
+                            cartIconSpan.classList.remove('hidden');
+                        } else {
+                            cartIconSpan.textContent = 0;
+                            cartIconSpan.classList.add('hidden');
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al obtener el carrito para el icono:', error);
+                    if (cartIconSpan) {
+                        cartIconSpan.textContent = 0;
+                        cartIconSpan.classList.add('hidden');
+                    }
+                });
+            }
+            updateCartIcon();
+            
+            // MOSTRAR USUARIO LOGUEADO EN HEADER (copiado para consistencia)
+            function updateLoginUI() {
+                const loginBtn = document.getElementById('loginBtn');
+                const authContainer = document.getElementById('authContainer');
+                const userName = localStorage.getItem('userName');
+                
+                if (localStorage.getItem('isLoggedIn') === 'true' && userName) {
+                    if (loginBtn) loginBtn.style.display = 'none';
+                    
+                    if (authContainer) {
+                        const existingWelcome = authContainer.querySelector('.text-gray-700.font-medium.mr-4');
+                        const existingLogoutBtn = authContainer.querySelector('.bg-red-500');
+                        if (existingWelcome) existingWelcome.remove();
+                        if (existingLogoutBtn) existingLogoutBtn.remove();
+
+                        const welcome = document.createElement('span');
+                        welcome.textContent = `¡Hola, ${userName}!`;
+                        welcome.className = 'text-gray-700 font-medium mr-4';
+                        authContainer.insertBefore(welcome, authContainer.firstChild);
+
+                        const logoutBtn = document.createElement('button');
+                        logoutBtn.textContent = 'Cerrar Sesión';
+                        logoutBtn.className = 'bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600';
+                        logoutBtn.onclick = function() {
+                            localStorage.clear();
+                            window.location.href = 'index.html';
+                        };
+                        authContainer.appendChild(logoutBtn);
+                    }
+                } else {
+                    if (loginBtn) loginBtn.style.display = 'block';
+                }
+            }
+            updateLoginUI();
+        });
+    </script>
+</body>
+</html>

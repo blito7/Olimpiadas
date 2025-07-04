@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras | Globe-co</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD&locale=es_AR"></script>
+    <script src="https://sdk.mercadopago.com/js/v2"></script>
+    <style>
+        .modal { display: none; }
+        .modal-open { display: flex !important; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .animate-fade-in { animation: fadeIn 0.5s ease-in-out; }
+        .delete-from-cart { transition: color 0.2s; }
+        .delete-from-cart:hover { color: #dc2626 !important; }
+    </style>
+</head>
+<body class="font-sans bg-gray-50">
+
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="text-blue-600 font-bold text-2xl">Globe-co</div>
+            <nav class="hidden md:flex space-x-6">
+                <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium">Inicio</a>
+                <a href="vuelos.html" class="text-gray-700 hover:text-blue-600 font-medium">Vuelos</a>
+                <a href="hoteles.html" class="text-gray-700 hover:text-blue-600 font-medium">Hoteles</a>
+                <a href="paquetes.html" class="text-gray-700 hover:text-blue-600 font-medium">Paquetes</a>
+                <a href="autos.html" class="text-gray-700 hover:text-blue-600 font-medium">Autos</a>
+                <a href="carrito.html" class="relative text-blue-600 font-medium ml-6">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-item-count" class="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+                </a>
+            </nav>
+            <div class="flex items-center space-x-4" id="authContainer">
+                <button id="loginBtn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Ingresar</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <h1 class="text-4xl font-extrabold text-center text-gray-800 mb-10">Tu Carrito de Compras</h1>
+        <div id="cart-content" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <section id="cart-items-container" class="lg:col-span-2 bg-white rounded-lg shadow-md p-6 space-y-4">
+                <p class="text-gray-600 text-center">Cargando ítems del carrito...</p>
+            </section>
+
+            <aside class="lg:col-span-1 bg-white rounded-lg shadow-md p-6 h-fit sticky top-24">
+                <h2 class="text-2xl font-bold mb-4 border-b pb-3">Resumen del Pedido</h2>
+                <div id="total-summary" class="space-y-4 mb-6"></div>
+                <div id="paypal-button-container"></div>
+                <div id="wallet_container" class="mt-4"></div>
+                <p id="empty-cart-message" class="text-gray-500 text-center hidden">Agrega productos a tu carrito para poder pagar.</p>
+            </aside>
+        </div>
+        <div id="login-prompt" class="text-center py-16 hidden">
+            <i class="fas fa-sign-in-alt text-5xl text-blue-500 mb-4"></i>
+            <h2 class="text-2xl font-bold text-gray-800">Inicia sesión para ver tu carrito</h2>
+            <p class="text-gray-600 mt-2">Para poder ver y gestionar los productos de tu carrito, primero debes iniciar sesión.</p>
+            <button onclick="document.getElementById('loginBtn').click()" class="mt-6 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
+                Ir a Iniciar Sesión
+            </button>
+        </div>
+    </main>
+
+    <div id="loginModal" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full animate-fade-in relative">
+            <button id="closeModalBtn" class="absolute top-3 right-3 text-gray-600 hover:text-gray-900 text-2xl">&times;</button>
+            <div class="p-6">
+                <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Iniciar Sesión</h2>
+                <form id="loginForm" class="space-y-4">
+                    <div>
+                        <label for="loginEmail" class="block text-gray-700 text-sm font-bold mb-2">Correo Electrónico</label>
+                        <input type="email" id="loginEmail" name="email" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="tu@ejemplo.com" required>
+                    </div>
+                    <div>
+                        <label for="loginPassword" class="block text-gray-700 text-sm font-bold mb-2">Contraseña</label>
+                        <input type="password" id="loginPassword" name="contrasena" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" placeholder="********" required>
+                    </div>
+                    <div>
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full transition-colors">
+                            Ingresar
+                        </button>
+                    </div>
+                    <p class="text-center text-gray-600 text-sm mt-4">
+                        ¿No tienes cuenta? <a href="registro.html" class="text-blue-600 hover:text-blue-800 font-bold">Regístrate aquí</a>.
+                    </p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+<script>
+const PUBLIC_KEY_MP = "TEST-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"; // reemplaza con tu public key de sandbox MercadoPago
+
+function updateLoginUI() {
+    const loginBtn = document.getElementById('loginBtn');
+    const authContainer = document.getElementById('authContainer');
+    const userName = localStorage.getItem('userName');
+
+    // Elimina mensajes/botones previos para evitar duplicados
+    const existingWelcome = authContainer.querySelector('.welcome-message');
+    const existingLogoutBtn = authContainer.querySelector('.logout-btn');
+    if (existingWelcome) existingWelcome.remove();
+    if (existingLogoutBtn) existingLogoutBtn.remove();
+
+    if (localStorage.getItem('isLoggedIn') === 'true' && userName) {
+        if (loginBtn) loginBtn.style.display = 'none';
+
+        // Mensaje de bienvenida
+        const welcome = document.createElement('span');
+        welcome.textContent = `¡Hola, ${userName}!`;
+        welcome.className = 'text-gray-700 font-medium mr-4 welcome-message';
+        authContainer.insertBefore(welcome, loginBtn);
+
+        // Botón logout
+        const logoutBtn = document.createElement('button');
+        logoutBtn.textContent = 'Cerrar Sesión';
+        logoutBtn.className = 'bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 logout-btn';
+        logoutBtn.onclick = function() {
+            localStorage.clear();
+            window.location.reload();
+        };
+        authContainer.appendChild(logoutBtn);
+
+    } else {
+        if (loginBtn) loginBtn.style.display = 'block';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const usuario_id = localStorage.getItem('usuarioId');
+    const cartContent = document.getElementById('cart-content');
+    const loginPrompt = document.getElementById('login-prompt');
+    const loginModal = document.getElementById('loginModal');
+    const loginBtn = document.getElementById('loginBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+
+    updateLoginUI();
+
+    // Login Modal (solo uno visible y funcional)
+    loginBtn.addEventListener('click', () => {
+        loginModal.classList.add('modal-open');
+        loginModal.classList.remove('hidden');
+    });
+    closeModalBtn.addEventListener('click', () => {
+        loginModal.classList.remove('modal-open');
+        loginModal.classList.add('hidden');
+    });
+    window.addEventListener('click', (e) => {
+        if(e.target === loginModal) {
+            loginModal.classList.remove('modal-open');
+            loginModal.classList.add('hidden');
+        }
+    });
+
+    // Login submit
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const email = document.getElementById('loginEmail').value;
+        const contrasena = document.getElementById('loginPassword').value;
+        const res = await fetch('login.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ email, contrasena })
+        });
+        const result = await res.json();
+        if (result.status === 'ok') {
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('userEmail', email);
+            localStorage.setItem('userRole', result.rol);
+            localStorage.setItem('userName', result.nombre);
+            localStorage.setItem('usuarioId', result.usuario_id);
+            loginModal.classList.remove('modal-open');
+            loginModal.classList.add('hidden');
+            updateLoginUI();
+
+            // Redirigir si la contraseña es admin_
+            if (contrasena.startsWith('admin_')) {
+                window.location.href = 'abm.html';
+            } else {
+                window.location.reload();
+            }
+        } else {
+            alert(result.msg);
+        }
+    });
+
+    // Mostrar u ocultar carrito/login
+    if (usuario_id) {
+        loginPrompt.classList.add('hidden');
+        cartContent.classList.remove('hidden');
+        loadCartItems(usuario_id);
+    } else {
+        cartContent.classList.add('hidden');
+        loginPrompt.classList.remove('hidden');
+    }
+});
+
+// Carga los items del carrito y renderiza botones de pago
+function loadCartItems(usuario_id) {
+    fetch('obtener_carrito.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ usuario_id })
+    })
+    .then(response => response.json())
+    .then(result => {
+        const itemsContainer = document.getElementById('cart-items-container');
+        const summaryContainer = document.getElementById('total-summary');
+        const paypalContainer = document.getElementById('paypal-button-container');
+        const mpContainer = document.getElementById('wallet_container');
+        const emptyCartMsg = document.getElementById('empty-cart-message');
+        let totalGeneral = 0;
+
+        itemsContainer.innerHTML = '';
+        summaryContainer.innerHTML = '';
+        paypalContainer.innerHTML = '';
+        mpContainer.innerHTML = '';
+
+        if (result.status === 'ok' && result.carrito.length > 0) {
+            result.carrito.forEach(item => {
+                const precio = parseFloat(item.precio) || 0;
+                const cantidad = parseInt(item.cantidad) || 0;
+                const subtotal = precio * cantidad;
+                totalGeneral += subtotal;
+
+                itemsContainer.innerHTML += `
+                    <div class="flex items-center space-x-4 border-b pb-4 last:border-b-0 group">
+                        <img src="${item.imagen || 'https://via.placeholder.com/80x80?text=Paquete'}" alt="${item.nombre}" class="w-20 h-20 object-cover rounded-md"> 
+                        <div class="flex-grow">
+                            <h3 class="text-lg font-semibold text-gray-900">${item.nombre}</h3>
+                            <p class="text-sm text-gray-500">Precio Unitario: $${precio.toLocaleString('es-AR')}</p>
+                            <p class="text-gray-600">Cantidad: ${cantidad}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-lg font-semibold text-gray-800">$${subtotal.toLocaleString('es-AR')}</p>
+                            <p class="text-sm text-gray-500">Subtotal</p>
+                        </div>
+                        <button class="ml-6 text-red-500 hover:text-red-700 delete-from-cart" title="Eliminar del carrito" data-id="${item.paquete_id}">
+                            <i class="fa fa-trash-alt"></i>
+                        </button>
+                    </div>`;
+            });
+
+            summaryContainer.innerHTML = `
+                <div class="flex justify-between items-center text-2xl font-extrabold text-blue-700">
+                    <span>Total:</span>
+                    <span>$${totalGeneral.toLocaleString('es-AR')}</span>
+                </div>`;
+
+            emptyCartMsg.classList.add('hidden');
+
+            // Botón PayPal
+            renderPayPalButton(totalGeneral);
+
+            // Botón Mercado Pago
+            renderMercadoPagoButton(result.carrito);
+
+            // Habilitar borrar del carrito
+            document.querySelectorAll('.delete-from-cart').forEach(btn => {
+                btn.onclick = function() {
+                    if(!confirm("¿Eliminar este producto del carrito?")) return;
+                    const paquete_id = this.getAttribute('data-id');
+                    fetch('eliminar_del_carrito.php', {
+                        method: 'POST',
+                        headers: {'Content-Type':'application/json'},
+                        body: JSON.stringify({
+                            usuario_id: localStorage.getItem('usuarioId'),
+                            paquete_id
+                        })
+                    })
+                    .then(r => r.json())
+                    .then(res => {
+                        alert(res.msg);
+                        loadCartItems(usuario_id);
+                        updateCartIcon();
+                    });
+                };
+            });
+
+        } else {
+            itemsContainer.innerHTML = '<p class="text-gray-600 text-center py-8">Tu carrito está vacío.</p>';
+            summaryContainer.innerHTML = `
+                <div class="flex justify-between items-center text-xl font-bold">
+                    <span>Total:</span>
+                    <span>$0</span>
+                </div>`;
+            emptyCartMsg.classList.remove('hidden');
+        }
+    })
+    .catch(error => {
+        console.error('Error al obtener el carrito:', error);
+        document.getElementById('cart-items-container').innerHTML = '<p class="text-red-500 text-center">Error de conexión. No se pudo cargar el carrito.</p>';
+    });
+}
+
+function renderPayPalButton(total) {
+    // Convierte el total de ARS a USD (ejemplo)
+    const tasaDeCambioARSaUSD = 1 / 920; // Cambia esto por la tasa real o consulta una API
+    const totalEnUSD = (total * tasaDeCambioARSaUSD).toFixed(2);
+
+    if (total <= 0) return;
+
+    paypal.Buttons({
+        style: {
+            layout:  'vertical',
+            color:   'blue',
+            shape:   'rect',
+            label:   'pay'
+        },
+        createOrder: function(data, actions) {
+            return actions.order.create({
+                purchase_units: [{
+                    description: 'Compra de paquetes turísticos en Globe-co',
+                    amount: {
+                        value: totalEnUSD,
+                        currency_code: 'USD'
+                    }
+                }]
+            });
+        },
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                alert('¡Pago completado exitosamente por ' + details.payer.name.given_name + '!');
+                // Aquí puedes limpiar el carrito y registrar la orden.
+            });
+        },
+        onError: function(err) {
+            console.error('Ocurrió un error con el pago de PayPal:', err);
+            alert('El pago no pudo ser procesado. Por favor, intente de nuevo.');
+        }
+    }).render('#paypal-button-container');
+}
+
+function renderMercadoPagoButton(carrito) {
+    if (!carrito || carrito.length === 0) return;
+
+    fetch('crear_preferencia_mp.php', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ items: carrito })
+    })
+    .then(resp => resp.json())
+    .then(data => {
+        const mp = new MercadoPago(PUBLIC_KEY_MP, {locale: 'es-AR'});
+        mp.bricks().create("wallet", "wallet_container", {
+            initialization: {
+                preferenceId: data.id
+            },
+            customization: {
+                texts: {
+                    valueProp: 'security_safety'
+                }
+            }
+        });
+    });
+}
+
+// Opcional: Actualiza el icono del carrito en header
+function updateCartIcon() {
+    const usuarioId = localStorage.getItem('usuarioId');
+    const cartIconSpan = document.getElementById('cart-item-count');
+    if (!usuarioId) {
+        if (cartIconSpan) {
+            cartIconSpan.textContent = 0;
+            cartIconSpan.classList.add('hidden');
+        }
+        return;
+    }
+    fetch('obtener_carrito.php', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({usuario_id: usuarioId})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (cartIconSpan) {
+            if (data.status === 'ok' && data.carrito.length > 0) {
+                let total = 0;
+                data.carrito.forEach(item => total += parseInt(item.cantidad));
+                cartIconSpan.textContent = total;
+                cartIconSpan.classList.remove('hidden');
+            } else {
+                cartIconSpan.textContent = 0;
+                cartIconSpan.classList.add('hidden');
+            }
+        }
+    });
+}
+updateCartIcon();
+</script>
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proceso de Pago | Globe-co</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex-grow: 1;
+        }
+
+        .payment-section {
+            background-color: #ffffff;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); /* shadow-xl */
+            padding: 2.5rem; /* p-10 */
+        }
+
+        .tab-button.active {
+            border-bottom: 3px solid #3B82F6;
+            color: #3B82F6;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="text-blue-600 font-bold text-2xl">Globe-co</div>
+            
+            <nav class="hidden md:flex space-x-6">
+                <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium">Inicio</a>
+                <a href="vuelos.html" class="text-gray-700 hover:text-blue-600 font-medium">Vuelos</a>
+                <a href="hoteles.html" class="text-gray-700 hover:text-blue-600 font-medium">Hoteles</a>
+                <a href="paquetes.html" class="text-gray-700 hover:text-blue-600 font-medium">Paquetes</a>
+                <a href="autos.html" class="text-gray-700 hover:text-blue-600 font-medium">Autos</a>
+                
+                <a href="carrito.html" class="relative text-gray-700 hover:text-blue-600 font-medium">
+                    <i class="fas fa-shopping-cart"></i> Carrito
+                    <span id="cart-item-count" class="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">
+                        0
+                    </span>
+                </a>
+            </nav>
+            
+            <div class="flex items-center space-x-4">
+                <div class="hidden md:block">
+                    <button class="bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200">
+                       <i class="fas fa-phone-alt mr-2"></i> Atención al cliente
+                    </button>
+                </div>
+                <button id="loginBtn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                    Ingresar
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 md:py-16">
+        <h1 class="text-4xl font-extrabold text-center text-gray-800 mb-10">Finalizar Compra</h1>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 payment-section">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Información de Pago</h2>
+                
+                <div class="flex border-b border-gray-200 mb-6">
+                    <button id="tab-card" class="tab-button py-3 px-6 text-gray-700 hover:text-blue-600 transition-colors active">
+                        <i class="fas fa-credit-card mr-2"></i> Tarjeta de Crédito / Débito
+                    </button>
+                    <button id="tab-paypal" class="tab-button py-3 px-6 text-gray-700 hover:text-blue-600 transition-colors">
+                        <i class="fab fa-paypal mr-2"></i> PayPal
+                    </button>
+                </div>
+
+                <div id="card-payment-form" class="payment-method-content">
+                    <form id="creditCardForm">
+                        <div class="mb-4">
+                            <label for="card-number" class="block text-gray-700 text-sm font-medium mb-2">Número de Tarjeta</label>
+                            <input type="text" id="card-number" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="XXXX XXXX XXXX XXXX" required>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                            <div>
+                                <label for="card-expiry" class="block text-gray-700 text-sm font-medium mb-2">Fecha de Vencimiento (MM/AA)</label>
+                                <input type="text" id="card-expiry" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="MM/AA" required>
+                            </div>
+                            <div>
+                                <label for="card-cvc" class="block text-gray-700 text-sm font-medium mb-2">CVC</label>
+                                <input type="text" id="card-cvc" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="XXX" required>
+                            </div>
+                            <div>
+                                <label for="card-zip" class="block text-gray-700 text-sm font-medium mb-2">Código Postal</label>
+                                <input type="text" id="card-zip" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="XXXX" required>
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <label for="card-name" class="block text-gray-700 text-sm font-medium mb-2">Nombre en la Tarjeta</label>
+                            <input type="text" id="card-name" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Nombre Apellido" required>
+                        </div>
+                        <button type="submit" class="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors w-full">
+                            Pagar con Tarjeta
+                        </button>
+                    </form>
+                </div>
+
+                <div id="paypal-payment-content" class="payment-method-content hidden text-center py-10">
+                    <img src="https://www.paypalobjects.com/digitalassets/c/website/marketing/na/us/logo-center/PP_H_btn_checkout_150x25.png" alt="PayPal Checkout" class="mx-auto mb-6">
+                    <p class="text-gray-700 text-lg mb-6">Serás redirigido a la página de PayPal para completar tu compra de forma segura.</p>
+                    <button id="payWithPaypalBtn" class="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors">
+                        Continuar con PayPal
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="lg:col-span-1 payment-section">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Resumen del Pedido</h2>
+                <div id="order-summary-items" class="space-y-4 mb-6">
+                    <p class="text-gray-500 text-center">No hay ítems en el resumen.</p>
+                </div>
+                <div class="border-t border-gray-200 pt-4 flex justify-between items-center">
+                    <span class="text-xl font-bold text-gray-800">Total a Pagar:</span>
+                    <span id="order-total-price" class="text-3xl font-extrabold text-blue-600">$0.00 ARS</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8 mt-12">
+        <div class="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <h4 class="font-bold text-lg mb-4">Globe-co</h4>
+                <p class="text-gray-400 text-sm">Tu compañero de viajes ideal. Ofreciendo las mejores experiencias alrededor del mundo.</p>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg mb-4">Enlaces Rápidos</h4>
+                <ul>
+                    <li class="mb-2"><a href="index.html" class="text-gray-400 hover:text-white">Inicio</a></li>
+                    <li class="mb-2"><a href="vuelos.html" class="text-gray-400 hover:text-white">Vuelos</a></li>
+                    <li class="mb-2"><a href="hoteles.html" class="text-gray-400 hover:text-white">Hoteles</a></li>
+                    <li class="mb-2"><a href="paquetes.html" class="text-gray-400 hover:text-white">Paquetes</a></li>
+                    <li class="mb-2"><a href="autos.html" class="text-gray-400 hover:text-white">Autos</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg mb-4">Contacto</h4>
+                <p class="text-gray-400 text-sm"><i class="fas fa-map-marker-alt mr-2"></i> Calle Falsa 123, Ciudad Autónoma de Buenos Aires</p>
+                <p class="text-gray-400 text-sm mt-2"><i class="fas fa-phone mr-2"></i> +54 9 11 1234 5678</p>
+                <p class="text-gray-400 text-sm mt-2"><i class="fas fa-envelope mr-2"></i> info@globeco.com</p>
+            </div>
+            <div>
+                <h4 class="font-bold text-lg mb-4">Síguenos</h4>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white text-2xl"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white text-2xl"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white text-2xl"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white text-2xl"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="text-center text-gray-500 text-sm mt-8 border-t border-gray-700 pt-4">
+            &copy; 2024 Globe-co. Todos los derechos reservados.
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const orderSummaryItems = document.getElementById('order-summary-items');
+            const orderTotalPriceSpan = document.getElementById('order-total-price');
+            const tabCard = document.getElementById('tab-card');
+            const tabPaypal = document.getElementById('tab-paypal');
+            const cardPaymentForm = document.getElementById('card-payment-form');
+            const paypalPaymentContent = document.getElementById('paypal-payment-content');
+            const creditCardForm = document.getElementById('creditCardForm');
+            const payWithPaypalBtn = document.getElementById('payWithPaypalBtn');
+
+            // Redirigir al carrito si no hay ítems en el localStorage
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            if (cart.length === 0) {
+                alert('No hay ítems en tu carrito. Serás redirigido al carrito para añadir productos.');
+                window.location.href = 'carrito.html';
+                return; // Detener la ejecución si no hay carrito
+            }
+
+            // Función para renderizar el resumen del pedido
+            function renderOrderSummary() {
+                orderSummaryItems.innerHTML = ''; // Limpiar el contenedor
+                let totalPrice = 0;
+
+                if (cart.length === 0) {
+                    orderSummaryItems.innerHTML = '<p class="text-gray-500 text-center">No hay ítems en el resumen.</p>';
+                    orderTotalPriceSpan.textContent = '$0.00 ARS';
+                    return;
+                }
+
+                cart.forEach(item => {
+                    const itemTotal = item.price * item.quantity;
+                    totalPrice += itemTotal;
+
+                    const summaryItemDiv = document.createElement('div');
+                    summaryItemDiv.className = 'flex justify-between items-center text-gray-700';
+                    summaryItemDiv.innerHTML = `
+                        <span>${item.name} (x${item.quantity})</span>
+                        <span>$${itemTotal.toLocaleString('es-AR')} ARS</span>
+                    `;
+                    orderSummaryItems.appendChild(summaryItemDiv);
+                });
+                orderTotalPriceSpan.textContent = `$${totalPrice.toLocaleString('es-AR')} ARS`;
+            }
+
+            // Función para cambiar de pestaña de pago
+            function changePaymentTab(selectedTab) {
+                // Eliminar 'active' de todos los botones y ocultar todos los contenidos
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.payment-method-content').forEach(content => content.classList.add('hidden'));
+
+                // Activar la pestaña y mostrar el contenido correspondiente
+                if (selectedTab === 'card') {
+                    tabCard.classList.add('active');
+                    cardPaymentForm.classList.remove('hidden');
+                } else if (selectedTab === 'paypal') {
+                    tabPaypal.classList.add('active');
+                    paypalPaymentContent.classList.remove('hidden');
+                }
+            }
+
+            // Event listeners para los botones de las pestañas
+            tabCard.addEventListener('click', () => changePaymentTab('card'));
+            tabPaypal.addEventListener('click', () => changePaymentTab('paypal'));
+
+            // Manejo del formulario de tarjeta de crédito
+            creditCardForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                // Aquí iría la lógica real de procesamiento de pago con tarjeta
+                // Por ahora, solo simulamos el éxito
+                alert('Pago con tarjeta procesado con éxito (simulado)!');
+                // Guardar los ítems del carrito para mostrarlos en la página de confirmación
+                localStorage.setItem('lastPurchasedItems', JSON.stringify(cart));
+                window.location.href = 'confirmacion.html';
+            });
+
+            // Manejo del botón de PayPal
+            payWithPaypalBtn.addEventListener('click', function() {
+                // Aquí iría la lógica real de redirección a PayPal
+                // Por ahora, solo simulamos el éxito
+                alert('Redirigiendo a PayPal para completar el pago (simulado)...');
+                // Guardar los ítems del carrito para mostrarlos en la página de confirmación
+                localStorage.setItem('lastPurchasedItems', JSON.stringify(cart));
+                window.location.href = 'confirmacion.html';
+            });
+
+            // Función para actualizar el icono del carrito en el header (misma que en otros archivos)
+            function updateCartIcon() {
+                let currentCart = JSON.parse(localStorage.getItem('cart')) || [];
+                const cartTotalItems = currentCart.reduce((total, item) => total + item.quantity, 0);
+                const cartIconSpan = document.getElementById('cart-item-count');
+                if (cartIconSpan) {
+                    cartIconSpan.textContent = cartTotalItems;
+                    if (cartTotalItems > 0) {
+                        cartIconSpan.classList.remove('hidden');
+                    } else {
+                        cartIconSpan.classList.add('hidden');
+                    }
+                }
+            }
+
+            // Inicializar al cargar la página
+            renderOrderSummary();
+            updateCartIcon();
+        });
+    </script>
+</body>
+</html>

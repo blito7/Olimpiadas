@@ -1,0 +1,202 @@
+/* Custom animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .flight-card:hover, .hotel-card:hover, .package-card:hover {
+            transform: translateY(-5px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab-active {
+            border-bottom: 3px solid #3B82F6;
+            color: #3B82F6;
+        }
+        
+        .modal {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        .modal-open {
+            display: flex;
+        }
+
+        
+        /*css de paquetes*/
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        
+        .package-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .package-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .price-badge {
+            position: absolute;
+            right: -10px;
+            top: 20px;
+            background: #10b981;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px 0 0 4px;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .discount-badge {
+            position: absolute;
+            left: 15px;
+            top: 15px;
+            background: #ef4444;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+        
+        .duration-badge {
+            position: absolute;
+            right: 15px;
+            bottom: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+        
+        .filter-section {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Custom tab styling */
+        .tab-button {
+            position: relative;
+            padding-bottom: 12px;
+            transition: all 0.3s;
+        }
+        
+        .tab-button:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 3px;
+            background: #10b981;
+            transition: all 0.3s;
+        }
+        
+        .tab-button.active {
+            color: #10b981;
+            font-weight: 600;
+        }
+        
+        .tab-button.active:after {
+            width: 100%;
+        }
+        
+        /* Custom range input */
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 5px;
+            background: #e2e8f0;
+            outline: none;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #10b981;
+            cursor: pointer;
+        }
+
+/*CSS de autos*/
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f7f7f7;
+        }
+        
+        .car-card {
+            transition: all 0.3s ease;
+        }
+        
+        .car-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        
+        .filter-section {
+            transition: all 0.3s ease;
+        }
+        
+        .filter-section.collapsed {
+            max-height: 50px;
+            overflow: hidden;
+        }
+        
+        .filter-toggle::after {
+            content: '+';
+            float: right;
+            font-weight: bold;
+        }
+        
+        .filter-toggle.collapsed::after {
+            content: '-';
+        }
+        
+        .car-image-container {
+            height: 180px;
+            overflow: hidden;
+        }
+        
+        .rating-stars {
+            color: #FFD700;
+            font-size: 0.9em;
+        }
+        
+        .feature-icon {
+            color: #00aa6c;
+            margin-right: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .search-form-container {
+                padding: 10px;
+            }
+            
+            .car-image-container {
+                height: 120px;
+            }
+            
+            .car-features {
+                flex-wrap: wrap;
+            }
+        }

@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoteles | Globe-co.com</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .modal { display: none; }
+        .modal-open { display: flex; }
+    </style>
+</head>
+<body class="font-sans bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="text-blue-600 font-bold text-2xl">Globe-co</div>
+            <nav class="hidden md:flex space-x-6">
+                <a href="index.html" class="text-gray-700 hover:text-blue-600 font-medium">Inicio</a>
+                <a href="vuelos.html" class="text-gray-700 hover:text-blue-600 font-medium">Vuelos</a>
+                <a href="hoteles.html" class="text-blue-600 font-medium">Hoteles</a>
+                <a href="paquetes.html" class="text-gray-700 hover:text-blue-600 font-medium">Paquetes</a>
+                <a href="autos.html" class="text-gray-700 hover:text-blue-600 font-medium">Autos</a>
+                <a href="carrito.html" class="relative text-blue-600 font-medium ml-6">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span id="cart-item-count" class="absolute -top-2 -right-3 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+                </a>
+            </nav>
+            <div class="flex items-center space-x-4" id="authContainer">
+                <div class="hidden md:block">
+                    <button class="bg-gray-100 text-gray-700 px-4 py-2 rounded hover:bg-gray-200">
+                       <i class="fas fa-phone-alt mr-2"></i> Atención al cliente
+                    </button>
+                </div>
+                <button id="loginBtn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Ingresar</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-20 flex flex-col items-center justify-center min-h-[50vh]">
+        <i class="fa fa-hotel text-blue-600 text-6xl mb-6"></i>
+        <h2 class="text-3xl font-bold text-blue-700 mb-2">¡Próximamente disponible!</h2>
+        <p class="text-gray-600 text-lg text-center">Muy pronto vas a poder reservar hoteles desde Globe-co.</p>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal fixed inset-0 bg-black bg-opacity-50 items-center justify-center p-4 z-50">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full animate-fade-in">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-2xl font-bold">Iniciar sesión</h3>
+                    <button id="closeModalBtn" class="text-gray-500 hover:text-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <form id="loginForm">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 mb-2">Email</label>
+                        <input type="email" id="loginEmail" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <div class="mb-6">
+                        <label class="block text-gray-700 mb-2">Contraseña</label>
+                        <input type="password" id="loginPassword" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                      
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700 transition mb-4">Iniciar sesión</button>
+                    <div class="text-center">
+                        <p class="text-gray-600">¿No tienes una cuenta? <a href="registro.html" class="text-blue-600 hover:underline">Regístrate</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Login modal
+        const loginModal = document.getElementById('loginModal');
+        const loginBtn = document.getElementById('loginBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        loginBtn.addEventListener('click', () => { loginModal.classList.add('modal-open'); });
+        closeModalBtn.addEventListener('click', () => { loginModal.classList.remove('modal-open'); });
+        window.addEventListener('click', (e) => { if(e.target === loginModal) loginModal.classList.remove('modal-open'); });
+
+        // LOGIN REAL
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const contrasena = document.getElementById('loginPassword').value;
+            const res = await fetch('login.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ email, contrasena })
+            });
+            const result = await res.json();
+            if (result.status === 'ok') {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('userEmail', email);
+                localStorage.setItem('userRole', result.rol);
+                localStorage.setItem('userName', result.nombre);
+                localStorage.setItem('usuarioId', result.usuario_id);
+                loginModal.classList.remove('modal-open');
+                window.location.reload();
+            } else {
+                alert(result.msg);
+            }
+        });
+
+        // Mostrar usuario logueado en header
+        function updateLoginUI() {
+            const loginBtn = document.getElementById('loginBtn');
+            const authContainer = document.getElementById('authContainer');
+            const userName = localStorage.getItem('userName');
+            if (localStorage.getItem('isLoggedIn') === 'true' && userName) {
+                if (loginBtn) loginBtn.style.display = 'none';
+                if (authContainer) {
+                    const existingWelcome = authContainer.querySelector('.text-gray-700.font-medium.mr-4');
+                    const existingLogoutBtn = authContainer.querySelector('.bg-red-500');
+                    if (existingWelcome) existingWelcome.remove();
+                    if (existingLogoutBtn) existingLogoutBtn.remove();
+                    const welcome = document.createElement('span');
+                    welcome.textContent = `¡Hola, ${userName}!`;
+                    welcome.className = 'text-gray-700 font-medium mr-4';
+                    authContainer.insertBefore(welcome, authContainer.firstChild);
+                    const logoutBtn = document.createElement('button');
+                    logoutBtn.textContent = 'Cerrar Sesión';
+                    logoutBtn.className = 'bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600';
+                    logoutBtn.onclick = function() { localStorage.clear(); window.location.href = 'hoteles.html'; };
+                    authContainer.appendChild(logoutBtn);
+                }
+            } else {
+                if (loginBtn) loginBtn.style.display = 'block';
+            }
+        }
+        updateLoginUI();
+
+        // Carrito: contador en header
+        function updateCartIcon() {
+            const usuarioId = localStorage.getItem('usuarioId');
+            const cartIconSpan = document.getElementById('cart-item-count');
+            if (!usuarioId) { cartIconSpan.textContent = 0; cartIconSpan.classList.add('hidden'); return; }
+            fetch('obtener_carrito.php', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json'},
+                body: JSON.stringify({ usuario_id: usuarioId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (cartIconSpan) {
+                    if (data.status === 'ok' && data.carrito.length > 0) {
+                        let total = 0;
+                        data.carrito.forEach(item => total += parseInt(item.cantidad));
+                        cartIconSpan.textContent = total;
+                        cartIconSpan.classList.remove('hidden');
+                    } else {
+                        cartIconSpan.textContent = 0;
+                        cartIconSpan.classList.add('hidden');
+                    }
+                }
+            })
+            .catch(() => { cartIconSpan.textContent = 0; cartIconSpan.classList.add('hidden'); });
+        }
+        updateCartIcon();
+    </script>
+</body>
+</html>
