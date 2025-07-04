@@ -1,0 +1,361 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paquetes Turísticos | TuAgenciaDeViajes</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+<?php
+ include 'includes/encabezado.php';
+?>
+    <div class="container mx-auto px-4 py-8">
+        <!-- Hero Section with Search -->
+        <div class="rounded-2xl overflow-hidden mb-12 relative">
+            <img src="https://placehold.co/1200x500?text=Descubre+el+Mundo+con+Nuestros+Paquetes&font=roboto" 
+                 alt="Familia feliz disfrutando de unas vacaciones en la playa con un fondo de montañas" 
+                 class="w-full h-96 object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-70"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-8 md:p-12 text-white">
+                <h1 class="text-3xl md:text-4xl font-bold mb-4">Paquetes Turísticos Completos</h1>
+                <p class="text-lg mb-6 max-w-2xl">Vive experiencias únicas con nuestros paquetes todo incluido a los mejores destinos del mundo</p>
+                
+                <div class="flex flex-wrap justify-center gap-4">
+                    <div class="relative flex-grow max-w-md">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-map-marker-alt text-gray-400"></i>
+                        </div>
+                        <input type="text" 
+                               class="pl-10 pr-4 py-3 w-full rounded-lg border-none focus:ring-2 focus:ring-blue-500" 
+                               placeholder="¿A dónde quieres viajar?">
+                    </div>
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-all">
+                        <i class="fas fa-search mr-2"></i> Buscar Paquetes
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Filters Section -->
+            <div class="lg:w-1/4">
+                <div class="filter-section p-6 sticky top-4">
+                    <h3 class="text-xl font-bold mb-6 text-gray-800">Filtrar Paquetes</h3>
+                    
+                    <!-- Price Range -->
+                    <div class="mb-6">
+                        <h4 class="font-semibold mb-3 text-gray-700">Rango de Precio</h4>
+                        <input type="range" min="0" max="500000" value="300000" class="w-full mb-2">
+                        <div class="flex justify-between text-sm text-gray-600">
+                            <span>$0</span>
+                            <span>$150,000</span>
+                            <span>$300,000</span>
+                            <span>$500,000+</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Destinations -->
+                    <div class="mb-6">
+                        <h4 class="font-semibold mb-3 text-gray-700">Destinos</h4>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded text-green-500 border-gray-300 focus:ring-blue-500 mr-2">
+                                <span>Europa</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded text-green-500 border-gray-300 focus:ring-blue-500 mr-2" checked>
+                                <span>América</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded text-green-500 border-gray-300 focus:ring-blue-500 mr-2">
+                                <span>Asia</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded text-green-500 border-gray-300 focus:ring-blue-500 mr-2">
+                                <span>África</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded text-green-500 border-gray-300 focus:ring-blue-500 mr-2">
+                                <span>Oceanía</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Duration -->
+                    <div class="mb-6">
+                        <h4 class="font-semibold mb-3 text-gray-700">Duración</h4>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded text-green-500 border-gray-300 focus:ring-blue-500 mr-2" checked>
+                                <span>3-5 noches</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded text-green-500 border-gray-300 focus:ring-blue-500 mr-2" checked>
+                                <span>6-8 noches</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded text-green-500 border-gray-300 focus:ring-blue-500 mr-2">
+                                <span>9-12 noches</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded text-green-500 border-gray-300 focus:ring-blue-500 mr-2">
+                                <span>+13 noches</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Trip Type -->
+                    <div class="mb-6">
+                        <h4 class="font-semibold mb-3 text-gray-700">Tipo de Viaje</h4>
+                        <div class="space-y-2">
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded text-green-500 border-gray-300 focus:ring-blue-500 mr-2">
+                                <span>Romántico</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded text-green-500 border-gray-300 focus:ring-blue-500 mr-2" checked>
+                                <span>Familiar</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded text-green-500 border-gray-300 focus:ring-blue-500 mr-2">
+                                <span>Aventura</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded text-green-500 border-gray-300 focus:ring-blue-500 mr-2">
+                                <span>Lujo</span>
+                            </label>
+                            <label class="flex items-center">
+                                <input type="checkbox" class="rounded text-green-500 border-gray-300 focus:ring-blue-500 mr-2">
+                                <span>Cultural</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium transition-colors">
+                        Aplicar Filtros
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Packages Listing -->
+            <div class="lg:w-3/4">
+                <!-- Sorting and Results -->
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 bg-white rounded-lg p-4 shadow-sm">
+                    <p class="text-gray-700 mb-3 sm:mb-0">Mostrando <span class="font-semibold">12</span> resultados</p>
+                    <div class="flex items-center">
+                        <span class="text-gray-700 mr-3">Ordenar por:</span>
+                        <select class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option>Recomendados</option>
+                            <option>Precio: Menor a mayor</option>
+                            <option>Precio: Mayor a menor</option>
+                            <option>Mejor calificación</option>
+                            <option>Duración</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Packages Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Package 1 -->
+                    <div class="package-card bg-white rounded-xl overflow-hidden relative">
+                        <div class="discount-badge">30% OFF</div>
+                        <div class="duration-badge">7 noches</div>
+                        <img src="https://placehold.co/600x400?text=Paris+Premium" alt="Vista panorámica de París con la Torre Eiffel al atardecer" class="w-full h-48 object-cover">
+                        <div class="p-5">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xl font-bold text-gray-800">París Premium</h3>
+                                <div class="flex items-center text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-3"><i class="fas fa-map-marker-alt text-green-500 mr-2"></i> Francia</p>
+                            <ul class="text-sm text-gray-600 mb-4 space-y-1">
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Vuelo directo clase turista</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Hotel 4* en centro histórico</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Desayuno buffet incluido</li>
+                            </ul>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-gray-500 line-through text-sm">$320,000</p>
+                                    <p class="text-2xl font-bold text-blue-600">$224,000</p>
+                                    <p class="text-gray-500 text-xs">por persona</p>
+                                </div>
+                                <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors">
+                                    <i class="fas fa-shopping-cart mr-2"></i> Reservar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Package 2 -->
+                    <div class="package-card bg-white rounded-xl overflow-hidden relative">
+                        <div class="duration-badge">5 noches</div>
+                        <img src="https://placehold.co/600x400?text=New+York+Experience" alt="Skyline de Nueva York al atardecer con rascacielos iluminados" class="w-full h-48 object-cover">
+                        <div class="p-5">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xl font-bold text-gray-800">New York Experience</h3>
+                                <div class="flex items-center text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-3"><i class="fas fa-map-marker-alt text-green-500 mr-2"></i> Estados Unidos</p>
+                            <ul class="text-sm text-gray-600 mb-4 space-y-1">
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Vuelo directo clase turista</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Hotel 3* en Manhattan</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Tour por lugares icónicos</li>
+                            </ul>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-2xl font-bold text-blue-600">$185,000</p>
+                                    <p class="text-gray-500 text-xs">por persona</p>
+                                </div>
+                                <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors">
+                                    <i class="fas fa-shopping-cart mr-2"></i> Reservar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Package 3 -->
+                    <div class="package-card bg-white rounded-xl overflow-hidden relative">
+                        <div class="discount-badge">25% OFF</div>
+                        <div class="duration-badge">8 noches</div>
+                        <img src="https://placehold.co/600x400?text=Roma+Clásica" alt="Vista del Coliseo Romano al atardecer con cielo naranja" class="w-full h-48 object-cover">
+                        <div class="p-5">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xl font-bold text-gray-800">Roma Clásica</h3>
+                                <div class="flex items-center text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-3"><i class="fas fa-map-marker-alt text-green-500 mr-2"></i> Italia</p>
+                            <ul class="text-sm text-gray-600 mb-4 space-y-1">
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Vuelo con escala</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Hotel 4* cerca del centro</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Visitas guiadas incluidas</li>
+                            </ul>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-gray-500 line-through text-sm">$240,000</p>
+                                    <p class="text-2xl font-bold text-blue-600">$180,000</p>
+                                    <p class="text-gray-500 text-xs">por persona</p>
+                                </div>
+                                <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors">
+                                    <i class="fas fa-shopping-cart mr-2"></i> Reservar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Package 4 -->
+                    <div class="package-card bg-white rounded-xl overflow-hidden relative">
+                        <div class="price-badge">Oferta limitada</div>
+                        <div class="duration-badge">6 noches</div>
+                        <img src="https://placehold.co/600x400?text=Caribe+Soñado" alt="Playa de arena blanca con aguas turquesas y palmeras en el Caribe" class="w-full h-48 object-cover">
+                        <div class="p-5">
+                            <div class="flex justify-between items-start mb-2">
+                                <h3 class="text-xl font-bold text-gray-800">Caribe Soñado</h3>
+                                <div class="flex items-center text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 text-sm mb-3"><i class="fas fa-map-marker-alt text-green-500 mr-2"></i> República Dominicana</p>
+                            <ul class="text-sm text-gray-600 mb-4 space-y-1">
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Vuelo directo</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Resort todo incluido 5*</li>
+                                <li><i class="fas fa-check-circle text-green-500 mr-2"></i> Actividades acuáticas</li>
+                            </ul>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <p class="text-gray-500 line-through text-sm">$280,000</p>
+                                    <p class="text-2xl font-bold text-blue-600">$210,000</p>
+                                    <p class="text-gray-500 text-xs">por persona</p>
+                                </div>
+                                <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center transition-colors">
+                                    <i class="fas fa-shopping-cart mr-2"></i> Reservar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="mt-8 flex justify-center">
+                    <nav class="flex items-center space-x-2">
+                        <button class="px-4 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button class="px-4 py-2 border border-green-600 bg-blue-600 text-white rounded-lg font-medium">
+                            1
+                        </button>
+                        <button class="px-4 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100">
+                            2
+                        </button>
+                        <button class="px-4 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100">
+                            3
+                        </button>
+                        <span class="px-2">...</span>
+                        <button class="px-4 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100">
+                            8
+                        </button>
+                        <button class="px-4 py-2 border border-gray-300 rounded-lg text-gray-600 hover:bg-gray-100">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Interactive elements functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tab functionality
+            const tabs = document.querySelectorAll('.tab-button');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Here you would load content for the selected tab
+                });
+            });
+            
+            // Add to cart functionality
+            const addToCartButtons = document.querySelectorAll('.package-card button');
+            
+            addToCartButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const packageCard = this.closest('.package-card');
+                    const packageName = packageCard.querySelector('h3').textContent;
+                    const packagePrice = packageCard.querySelector('.text-2xl').textContent;
+                    
+                    alert(`Agregado al carrito: ${packageName} - ${packagePrice}`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
